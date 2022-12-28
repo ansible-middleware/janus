@@ -15,7 +15,7 @@
         var: upstream_collection_name
 
     - debug:
-        var: "{{ lookup('env', UPSTREAM_COLLECTION_NAME) }}"
+        var: "{{ lookup('env', 'UPSTREAM_COLLECTION_NAME') }}"
     - name: "Ensure all required parameters have been provided"
       ansible.builtin.assert:
         that:
