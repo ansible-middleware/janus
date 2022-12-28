@@ -11,6 +11,8 @@
     downstream_repository_host_env_varname: 'INTERNAL_GIT_REPOSITORY_URL'
     skip_setup: True
   pre_tasks:
+    - debug:
+        var: upstream_collection_name
     - name: "Ensure all required parameters have been provided"
       ansible.builtin.assert:
         that:
