@@ -10,12 +10,14 @@
     downstream_projects_dir: "{{ workdir }}/downstream"
     downstream_repository_host_env_varname: 'INTERNAL_GIT_REPOSITORY_URL'
     skip_setup: True
+    debug: "{{ lookup('env', 'UPSTREAM_COLLECTION_NAME') }}"
   pre_tasks:
     - debug:
         var: upstream_collection_name
 
     - debug:
-        var: "{{ lookup('env', 'UPSTREAM_COLLECTION_NAME') }}"
+        var: debug
+
     - name: "Ensure all required parameters have been provided"
       ansible.builtin.assert:
         that:
