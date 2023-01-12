@@ -18,10 +18,6 @@
   ansible.builtin.set_fact:
     downstream_defaults: "{{ (lookup('file',role_folder.path+'/meta/argument_specs.yml') | from_yaml).argument_specs.downstream.options | default({}) }}"
 
-- name: "debug"
-  ansible.builtin.debug:
-    msg: "{{ downstream_defaults }}"
-
 ### disabled for now as collections does not yet complies to this
 - name: "{{ janus_strict_role_name }} Check that role name '{{ rolename }}' begin with '{{ upstream_name }}'."
   ansible.builtin.assert:

@@ -10,11 +10,9 @@
     downstream_collection_name: "{{ downstream_project | basename }}"
 
 - block:
-    - ansible.builtin.debug:
-        msg: "Attempt to run default to downstream playbook for {{ downstream_collection_name }}."
-
     #TODO check that file exists on controller would be nicer
-    - ansible.builtin.include_tasks: "playbooks/defaults_to_downstream/{{ downstream_collection_name }}.yml"
+    - name: "Attempt to run default to downstream playbook for {{ downstream_collection_name }}."
+      ansible.builtin.include_tasks: "playbooks/defaults_to_downstream/{{ downstream_collection_name }}.yml"
   rescue:
     - ansible.builtin.debug:
         msg: "No such playbook, carrying on."
