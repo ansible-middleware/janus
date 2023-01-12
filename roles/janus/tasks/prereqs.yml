@@ -1,6 +1,18 @@
 ---
-- ansible.builtin.include_tasks: fastpackage.yml
+- name: "Check if playbook is running with root privileges"
+  ansible.builtin.command: "ud -i"
+  register: user_uid
+
+- ansible.builtin.assert:
+        that:
+          - user_uid.stdout == "0"
+        quiet: true
+
+- name: "Install required dependencies, if playbooks runs as root."
+  ansible.builtin.include_tasks: fastpackage.yml
   vars:
     package_name: "{{ item }}"
   loop:
     - rsync
+  when:
+    - user_uid.stdout == "0"

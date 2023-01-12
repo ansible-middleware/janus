@@ -1,6 +1,4 @@
 ---
-- ansible.builtin.include_tasks: prereqs.yml
-
 - ansible.builtin.include_tasks: utils/check_required_parameters.yml
 
 - ansible.builtin.include_tasks: utils/check_dir_exists.yml
