@@ -1,7 +1,7 @@
 ---
 - import_playbook: job.yml
   vars:
-    false_positives:
+    post_processors_replacements:
       - match: "sso[.]service[.]j2"
         replace: "keycloak.service.j2"
         file: 'systemd[.]yml$'

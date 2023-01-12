@@ -1,6 +1,0 @@
----
-- import_playbook: ../janus.yml
-  vars:
-    upstream_name: jws
-    downstream_name: "{{ upstream_name }}"
-    project_git_url: "https://github.com/ansible-middleware/jws.git"

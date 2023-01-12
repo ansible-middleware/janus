@@ -1,6 +1,0 @@
----
-- import_playbook: ../janus.yml
-  vars:
-    upstream_name: redhat_csp_download
-    downstream_name: redhat_csp_download
-    project_git_url: "https://github.com/ansible-middleware/redhat-csp-download.git"

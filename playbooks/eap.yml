@@ -1,7 +1,7 @@
 ---
 - import_playbook: job.yml
   vars:
-    false_positives:
+    post_processors_replacements:
      - match: "eap_install_workdir: /opt/eap"
        replace: "eap_install_workdir: /opt"
      - match: "eap[.]statistics-enabled"

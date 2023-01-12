@@ -23,7 +23,7 @@
   vars:
     upstream_value: "{{ string.match }}"
     downstream_value: "{{ string.replace }}"
-  loop: "{{ false_positives | default([]) }}"
+  loop: "{{ post_processors_replacements | default([]) }}"
   loop_control:
     loop_var: string
   when: string.file is not defined or path_to_file is regex(string.file)

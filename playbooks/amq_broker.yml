@@ -1,7 +1,7 @@
 ---
 - import_playbook: ./job.yml
   vars:
-    false_positives:
+    post_processors_replacements:
       - match: "amq_broker[.]xsd"
         replace: "activemq.xsd"
       - match: "org[.]apache[.]amq_broker[.]"

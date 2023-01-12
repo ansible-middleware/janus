@@ -1,7 +1,7 @@
 ---
 - import_playbook: ./job.yml
   vars:
-    false_positives:
+    post_processors_replacements:
       - match: "data_grid[.]service[.]j2"
         replace: "infinispan.service.j2"
         file: '[.]yml$'
