@@ -1,8 +1,0 @@
----
-- import_playbook: ../janus.yml
-  vars:
-    upstream_name: "{{ lookup('env', 'PROJECT_UPSTREAM_NAME') }}"
-    downstream_name: "{{ lookup('env', 'PROJECT_NAME') }}"
-    upstream_collection_name: "{{ lookup('env', 'UPSTREAM_COLLECTION_NAME') | default(omit) }}"
-    project_git_url: "{{ lookup('env', 'GIT_REPOSITORY_URL') }}"
-    project_git_version: "{{ lookup('env', 'GIT_REPOSITORY_BRANCH') }}"

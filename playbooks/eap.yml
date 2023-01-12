@@ -1,5 +1,5 @@
 ---
-- import_playbook: job.yml
+- import_playbook: janus.yml
   vars:
     post_processors_replacements:
      - match: "eap_install_workdir: /opt/eap"
