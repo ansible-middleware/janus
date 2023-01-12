@@ -1,0 +1,24 @@
+---
+namespace: middleware_automation
+name: janus
+version: "1.0.0"
+readme: README.md
+authors:
+  - Romain Pelisse <belaran@redhat.com>
+  - Guido Grazioli <ggraziol@redhat.com>
+description: Janus is a transformation process to turns an upstream Ansible collection (community) into a downstream one (certificed content).
+license_file: "LICENSE"
+tags: [collection, ansible, release, git]
+dependencies:
+  community.general: ">=5.6.0"
+repository: https://github.com/ansible-middleware/janus
+documentation: https://ansible-middleware.github.io/janus
+homepage: https://github.com/ansible-middleware/janus
+issues: https://github.com/ansible-middleware/janus/issues
+build_ignore:
+  - molecule
+  - .github
+  - '*.tar.gz'
+  - '*.zip'
+  - changelogs/fragments/.gitignore
+  - .gitignore
