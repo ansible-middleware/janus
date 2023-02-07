@@ -7,3 +7,8 @@ middleware_automation.janus Release Notes
 
 v1.0.0-devel
 ============
+
+Minor Changes
+-------------
+
+- Ignore errors when removing dir from downstream `#12 <https://github.com/ansible-middleware/janus/pull/12>`_
