@@ -62,7 +62,7 @@
   register: plugin_results
 
 - name: Update plugins (ensures EXAMPLES will have correct FQCNs)
-  ansible.builtin.include_tasks: utils/rename_vars_in_file.yml
+  ansible.builtin.include_tasks: utils/replace_name_and_namespace.yml
   vars:
     path_to_file: "{{ item.path }}"
   loop:  "{{ plugin_results.files }}"

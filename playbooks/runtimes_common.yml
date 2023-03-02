@@ -1,0 +1,10 @@
+---
+- import_playbook: ./janus.yml
+  vars:
+    post_processors_replacements:
+      - match: "module_utils[.]args_runtimes_common"
+        replace: "module_utils.args_common"
+      - match: "add_file_runtimes_common_args"
+        replace: "add_file_common_args"
+      - match: "load_file_runtimes_common_arguments"
+        replace: "load_file_common_arguments"
