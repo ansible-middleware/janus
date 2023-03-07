@@ -38,7 +38,7 @@ Role Defaults
 |`downstream_projects_dir`| Directory where the downstream collection will be generated | `{{ workdir }}/downstream` |
 |`skip_setup`| Whether to skip the pre-transformation setup phase | `True` |
 |`post_processors_replacements`| List of { match, replace, file } dicts for post processing replacements. `match` and `replace` are regexes for string replacements while `file` is a regex matcher filtering filenames to post-process | `[]` |
-
+|`upstream_downstream_collections_map`| List of dependency mappings {upstream_name, downstream_name} for renaming in tasks, galaxy.yml and requirements.yml | `[]` |
 <!--end argument_specs-->
 
 

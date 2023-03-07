@@ -11,4 +11,5 @@ v1.0.0-devel
 Minor Changes
 -------------
 
+- Add replacements for dependencies <fqcn>.<module> `#21 <https://github.com/ansible-middleware/janus/pull/21>`_
 - Ignore errors when removing dir from downstream `#12 <https://github.com/ansible-middleware/janus/pull/12>`_
