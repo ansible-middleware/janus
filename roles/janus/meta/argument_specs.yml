@@ -52,9 +52,18 @@ argument_specs:
                 description: "List of { match, replace, file } dicts for post processing replacements. `match` and `replace` are regexes for string replacements while `file` is a regex matcher filtering filenames to post-process"
             upstream_downstream_collections_map:
                 type: 'list'
-                default: ""
+                default: []
                 description: "List of dependency mappings {upstream_name, downstream_name} for renaming in tasks, galaxy.yml and requirements.yml"
             upstream_organisation:
                 type: 'str'
                 default: 'ansible-middleware'
                 description: 'github.com organisation for upstream repositories'
+            downstream_placeholder_delete:
+                type: 'list'
+                default: []
+                description: "List of placeholder comments for removing upstream only documentation snippets"
+            # anything inside <!--start {{ downstream_placeholder_content }} --> and <!--end {{ downstream_placeholder_content }} --> will be replaced with content
+            downstream_placeholder_content:
+                type: 'list'
+                default: []
+                description: "List of placeholder comments used to add/replace downstream documentation snippets. List of dict(placeholder:str,content:str)"
