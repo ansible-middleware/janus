@@ -44,3 +44,23 @@
       - match: '/bin/add-user-sso'
         replace: '/bin/add-user-keycloak'
         file: 'main[.]yml$'
+    # anything inside <!--start {{ downstream_placeholder_delete }} --> and <!--end {{ downstream_placeholder_delete }} --> will be removed
+    downstream_placeholder_delete: []
+    # anything inside <!--start {{ downstream_placeholder_content }} --> and <!--end {{ downstream_placeholder_content }} --> will be replaced with content
+    downstream_placeholder_content:
+      - placeholder: support
+        content: |
+          ## Support
+          
+          {{ downstream_name }} collection v{{ downstream_version }} is a Beta release and for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
+          If you have any issues or questions related to collection, please don't hesitate to contact us on Ansible-middleware-core@redhat.com or open an issue on 
+          https://github.com/ansible-middleware/{{ upstream_name }/issues
+      - placeholder: rhn_credentials
+        content: |
+          ## Downloading from the Customer Portal
+
+          The `{{ downstream_name }}` role supports downloading and installing from the Red Hat Customer Portal, when the following variables are defined:
+          ```
+          rhn_username{{':'}} '<customer_portal_username>'
+          rhn_password{{':'}} '<customer_portal_password>'
+          ```
