@@ -54,7 +54,7 @@
 
           Before using the collection, you need to setup Ansible Automation Hub as galaxy server; then install it via the CLI:
 
-              ansible-galaxy collection install middleware_automation.keycloak
+              ansible-galaxy collection install redhat.sso
       - placeholder: support
         content: |
           ## Support
