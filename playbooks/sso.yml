@@ -44,15 +44,22 @@
       - match: '/bin/add-user-sso'
         replace: '/bin/add-user-keycloak'
         file: 'main[.]yml$'
-    # anything inside <!--start {{ downstream_placeholder_delete }} --> and <!--end {{ downstream_placeholder_delete }} --> will be removed
+    # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
     downstream_placeholder_delete: []
-    # anything inside <!--start {{ downstream_placeholder_content }} --> and <!--end {{ downstream_placeholder_content }} --> will be replaced with content
+    # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content:
+      - placeholder: galaxy_download
+        content: |
+          ### Installing the Collection from Automation Hub
+
+          Before using the collection, you need to setup Ansible Automation Hub as galaxy server; then install it via the CLI:
+
+              ansible-galaxy collection install middleware_automation.keycloak
       - placeholder: support
         content: |
           ## Support
           
-          redhat.sso collection v{{ downstream_version }} is a Beta release and for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
+          redhat.sso collection v{{ galaxy_version | default('0.0.0-dev') }} is a Beta release and for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
           If you have any issues or questions related to collection, please don't hesitate to contact us on Ansible-middleware-core@redhat.com or open an issue on 
           https://github.com/ansible-middleware/keycloak/issues
       - placeholder: rhn_credentials
@@ -64,3 +71,5 @@
           rhn_username{{':'}} '<customer_portal_username>'
           rhn_password{{':'}} '<customer_portal_password>'
           ```
+
+          The downloaded file will be stored in the controller working directory, and then distributed to target nodes.

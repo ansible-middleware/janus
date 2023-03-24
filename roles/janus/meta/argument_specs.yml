@@ -67,3 +67,8 @@ argument_specs:
                 type: 'list'
                 default: []
                 description: "List of placeholder comments used to add/replace downstream documentation snippets. List of dict(placeholder:str,content:str)"
+            override_galaxy_version:
+                type: 'str'
+                required: no
+                default: None
+                description: 'Set to override value of downstream version read from galaxy.yml'

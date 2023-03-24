@@ -3,6 +3,15 @@
   ansible.builtin.set_fact:
     downstream_galaxy_yml: "{{ downstream_project }}/galaxy.yml"
 
+- name: "Slurp galaxy.yml"
+  ansible.builtin.slurp:
+    src: "{{ downstream_project }}/galaxy.yml"
+  register: galaxy_yml
+
+- name: "Slurp galaxy collection version"
+  ansible.builtin.set_fact:
+    galaxy_version: "{{ override_galaxy_version | default((galaxy_yml.content | b64decode | from_yaml)['version'], true) }}"
+
 - name: "Copy galaxy.yml from {{ upstream_project }} to {{ downstream_project }}"
   ansible.builtin.copy:
     src: "{{ project_root_folder }}/galaxy.yml"
