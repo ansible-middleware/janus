@@ -43,7 +43,11 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User documentation</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">README - Janus</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">README - Janus</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-install-the-janus-collection">How to install the Janus collection?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-use-janus">How to use Janus?</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="roles/index.html">Role Index</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
@@ -96,6 +100,29 @@
 <h1>README - Janus<a class="headerlink" href="#readme-janus" title="Permalink to this heading"></a></h1>
 <p>This project, called Janus, is a set of Ansible roles designed to transform a collection from upstream to downstream. This process is somewhat specific to Red Hat. In order to provide certify content over Ansible Automation Hub, collections are required to use the redhat namespace and, in the case of collections related to middleware products (like JBoss EAP or Red Hat SSO), it is also required to change name of the collection from the upstream version (Wildfly, Keycloak) to the downstream one (JBoss EAP, RH SSO).</p>
 <p>Janus takes care of the changes required, ensuring that the downstream collections is identical to the upstream, apart for the required naming changes.</p>
+<section id="how-to-install-the-janus-collection">
+<h2>How to install the Janus collection?<a class="headerlink" href="#how-to-install-the-janus-collection" title="Permalink to this heading"></a></h2>
+<p>Like any other Ansible collection!</p>
+<p>$ ansible-galaxy collection install middleware_automation.janus</p>
+</section>
+<section id="how-to-use-janus">
+<h2>How to use Janus?<a class="headerlink" href="#how-to-use-janus" title="Permalink to this heading"></a></h2>
+<p>Suppose you have an upstream collection called <strong>isawesome</strong> living in the namespace <strong>mystuff</strong>. So the fqdn of your collection is <strong>mystuff.isawesome</strong> (see what I did there?). Now, you want to generate a downstream version to deliver certified content to your customers. Your company is <strong>thisisserious</strong> and the downstream of your collection is now <strong>stuff</strong>, so the fqdn is <strong>thisisserious.stuff</strong> (yes, I’m sticking with it). The upstream collection is living in the <strong>mystuff</strong> organiation on github.com and the project is called <strong>isawesome_collection</strong>.</p>
+<p>Here is an example playbook to use Janus to generate the downstream collection (thisisserious.stuff) from the upstream one (mystuff.isawesome):</p>
+<div class="highlight-YAML+Jinja notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">import_playbook</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">janus.yml</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">upstream_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isawesome</span>
+<span class="w">    </span><span class="nt">upstream_namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mystuff</span>
+<span class="w">    </span><span class="nt">downstream_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stuff</span>
+<span class="w">    </span><span class="nt">downstream_namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thisisserious</span>
+<span class="w">    </span><span class="nt">post_processors_replacements</span><span class="p">:</span>
+<span class="w">     </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://github.com/thisisserious/stuff&quot;</span>
+<span class="w">       </span><span class="nt">replace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://github.com/mystuff/isawesome&quot;</span>
+</pre></div>
+</div>
+<p>Note the the post_processors_replacements variables allow Janus user to specifiy strings that needs to be replace <strong>after</strong> the transformation process. As illustrated in the example above, the rewriting to content to match the downstream_namespace.downstream_collection_name can sometime transform content that needs to stay the same or replace differently.</p>
+</section>
 </section>
 
 
