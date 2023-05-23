@@ -32,15 +32,17 @@
           <https://github.com/ansible-middleware/keycloak/issues>
       - placeholder: rhn_credentials
         content: |
-          ## Downloading from the Customer Portal
+          ## Downloading products from the Customer Portal
 
-          The `redhat.eap.eap_install` role supports downloading and installing from the Red Hat Customer Portal, when the following variables are defined:
+          The `redhat.eap.eap_install` role supports downloading and installing from the Red Hat Customer Portal using credentials associated to a service account. After
+          login in the customer portal and navigating to the hybrid cloud console, select the [services account tab](https://console.redhat.com/application-services/service-accounts)
+          to create one, if needed. Client ID and Client secret associated to the service account needs to be provided with the following variables are defined:
           ```
-          rhn_username{{':'}} '<customer_portal_username>'
-          rhn_password{{':'}} '<customer_portal_password>'
+          rhn_username{{':'}} '<client_id>'
+          rhn_password{{':'}} '<client_secret>'
           ```
 
-          The downloaded file will be stored in the controller working directory, and then distributed to target nodes.
+          The downloaded product archive will be stored in the controller working directory, and then distributed to target nodes.
 
           When patching is requested, via the `eap_apply_cp` variable, the most recently published cumulative patch will be installed; to use a specific patch version instead,
           set it with the `eap_patch_version` variable.
