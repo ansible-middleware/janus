@@ -27,6 +27,6 @@ sections:
   - Bugfixes
 - - known_issues
   - Known Issues
-title: middleware_automation.janus
+title: middleware_automation.ansible_raft
 trivial_section_name: trivial
 use_fqcn: true

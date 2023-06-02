@@ -1,20 +1,20 @@
 ---
 namespace: middleware_automation
-name: janus
+name: ansible_raft
 version: "1.0.0"
 readme: README.md
 authors:
   - Romain Pelisse <belaran@redhat.com>
   - Guido Grazioli <ggraziol@redhat.com>
-description: Janus is a transformation process to turns an upstream Ansible collection (community) into a downstream one (certificed content).
+description: Ansible Raft is a transformation process to turns an upstream Ansible collection (community) into a downstream one (certificed content).
 license_file: "LICENSE"
 tags: [collection, ansible, release, git, tools]
 dependencies:
   ansible.posix: ">=1.3.0"
-repository: https://github.com/ansible-middleware/janus
-documentation: https://ansible-middleware.github.io/janus
-homepage: https://github.com/ansible-middleware/janus
-issues: https://github.com/ansible-middleware/janus/issues
+repository: https://github.com/ansible-middleware/ansible_raft
+documentation: https://ansible-middleware.github.io/ansible_raft
+homepage: https://github.com/ansible-middleware/ansible_raft
+issues: https://github.com/ansible-middleware/ansible_raft/issues
 build_ignore:
   - molecule
   - .github

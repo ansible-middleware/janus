@@ -19,7 +19,7 @@
     downstream_defaults: "{{ (lookup('file',role_folder.path+'/meta/argument_specs.yml') | from_yaml).argument_specs.downstream.options | default({}) }}"
 
 ### disabled for now as collections does not yet complies to this
-- name: "{{ janus_strict_role_name }} Check that role name '{{ rolename }}' begin with '{{ upstream_name }}'."
+- name: "{{ ansible_raft_strict_role_name }} Check that role name '{{ rolename }}' begin with '{{ upstream_name }}'."
   ansible.builtin.assert:
     that:
       - rolename is defined
@@ -27,8 +27,8 @@
     quiet: true
     fail_msg: "Invald rolename: {{ rolename }}"
   when:
-    - janus_strict_role_name is defined
-    - janus_strict_role_name
+    - ansible_raft_strict_role_name is defined
+    - ansible_raft_strict_role_name
     - to_fix is defined
 #TODO fix logic above
 

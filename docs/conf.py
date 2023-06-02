@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../plugins/module_utils/'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Middleware Automation Janus'
+project = 'Middleware Automation ansible_raft'
 copyright = '{y}, Red Hat, Inc.'.format(y=datetime.date.today().year)
 author = 'Red Hat, Inc.'
 
@@ -108,7 +108,7 @@ html_static_path = []
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'JanusCollectionDoc'
+htmlhelp_basename = 'ansible_raftCollectionDoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -135,7 +135,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'JanusCollection.tex', 'Red Hat Janus Ansible Collection Documentation',
+    (master_doc, 'ansible_raftCollection.tex', 'Red Hat ansible_raft Ansible Collection Documentation',
      'Red Hat, Inc.', 'manual'),
 ]
 
@@ -145,7 +145,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'januscollection', 'Red Hat Janus Ansible Collection Documentation',
+    (master_doc, 'ansible_raftcollection', 'Red Hat ansible_raft Ansible Collection Documentation',
      [author], 1)
 ]
 
@@ -156,8 +156,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'JanusCollection', 'Red Hat Janus Ansible Collection Documentation',
-     author, 'JanusCollection', 'One line description of project.',
+    (master_doc, 'ansible_raftCollection', 'Red Hat ansible_raft Ansible Collection Documentation',
+     author, 'ansible_raftCollection', 'One line description of project.',
      'Miscellaneous'),
 ]
 

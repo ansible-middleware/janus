@@ -1,6 +1,6 @@
-.. Red Hat middleware_automation janus Ansible Collection documentation main file
+.. Red Hat middleware_automation ansible_raft Ansible Collection documentation main file
 
-Welcome to Janus Collection documentation
+Welcome to ansible_raft Collection documentation
 =========================================
 
 .. toctree::

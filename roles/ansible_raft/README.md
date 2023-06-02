@@ -1,4 +1,4 @@
-janus
+ansible_raft
 =====
 
 
@@ -48,7 +48,7 @@ Example Playbook
 ---
 - hosts: all
   collections:
-    - middleware_automation.janus
+    - middleware_automation.ansible_raft
   roles:
-    - janus
+    - ansible_raft
 ```

@@ -1,9 +1,9 @@
 ---
 collections:
-  - middleware_automation.janus
+  - middleware_automation.ansible_raft
 
 galaxy_info:
-  role_name: janus
+  role_name: ansible_raft
   namespace: middleware_automation
   author: Romain Pelisse
   description: Role designed to transform a collection from upstream to downstream

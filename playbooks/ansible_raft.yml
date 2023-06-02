@@ -1,9 +1,9 @@
 ---
-- name: "Janus transformation process"
+- name: "ansible_raft transformation process"
   hosts: localhost
   gather_facts: no
   collections:
-    - middleware_automation.janus
+    - middleware_automation.ansible_raft
   vars:
     upstream_name: "{{ lookup('env', 'PROJECT_UPSTREAM_NAME') }}"
     downstream_name: "{{ lookup('env', 'PROJECT_NAME') }}"
@@ -43,23 +43,23 @@
 
     - name: "Git clone {{ project_git_url }} into {{ project_root_folder }}"
       ansible.builtin.include_role:
-        name: middleware_automation.janus.git
+        name: middleware_automation.ansible_raft.git
         tasks_from: clone.yml
       when:
         - project_root_folder is defined
         - project_git_url is defined
 
   tasks:
-    - name: "Run Janus."
+    - name: "Run ansible_raft."
       ansible.builtin.include_role:
-        name: middleware_automation.janus.janus
+        name: middleware_automation.ansible_raft.ansible_raft
       tags: always
 
   post_tasks:
 
     - name: "Peform release (if requested)."
       ansible.builtin.include_role:
-        name: middleware_automation.janus.release
+        name: middleware_automation.ansible_raft.release
 
     - name: "Build collection for {{ downstream_name }}"
       command: ansible-galaxy collection build .

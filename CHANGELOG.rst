@@ -1,5 +1,5 @@
 =========================================
-middleware_automation.janus Release Notes
+middleware_automation.ansible_raft Release Notes
 =========================================
 
 .. contents:: Topics

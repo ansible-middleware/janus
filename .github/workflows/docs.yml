@@ -16,7 +16,7 @@ env:
 jobs:
   docs:
     runs-on: ubuntu-latest
-    if: github.repository == 'ansible-middleware/janus'
+    if: github.repository == 'ansible-middleware/ansible_raft'
     permissions:
       actions: write
       checks: write
@@ -28,7 +28,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
         with:
-          path: ansible_collections/middleware_automation/janus
+          path: ansible_collections/middleware_automation/ansible_raft
           fetch-depth: 0
 
       - name: Set up Python
@@ -39,26 +39,26 @@ jobs:
       - name: Install doc dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r ansible_collections/middleware_automation/janus/docs/requirements.txt
-          if [ -f ansible_collections/middleware_automation/janus/requirements.txt ]; then
-            pip install -r ansible_collections/middleware_automation/janus/requirements.txt
+          pip install -r ansible_collections/middleware_automation/ansible_raft/docs/requirements.txt
+          if [ -f ansible_collections/middleware_automation/ansible_raft/requirements.txt ]; then
+            pip install -r ansible_collections/middleware_automation/ansible_raft/requirements.txt
           fi
           sudo apt install -y sed hub
 
       - name: Create default collection path
         run: |
           mkdir -p /home/runner/.ansible/
-          ln -s /home/runner/work/janus/janus /home/runner/.ansible/collections
+          ln -s /home/runner/work/ansible_raft/ansible_raft /home/runner/.ansible/collections
 
       - name: Create changelog and documentation
         uses: ansible-middleware/collection-docs-action@main
         with:
-          collection_fqcn: middleware_automation.janus
-          collection_repo: ansible-middleware/janus
+          collection_fqcn: middleware_automation.ansible_raft
+          collection_repo: ansible-middleware/ansible_raft
           dependencies: false
           commit_changelog: false
           commit_ghpages: true
           changelog_release: false
           generate_docs: true
-          path: ansible_collections/middleware_automation/janus
+          path: ansible_collections/middleware_automation/ansible_raft
           token: ${{ secrets.GITHUB_TOKEN }}

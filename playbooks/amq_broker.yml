@@ -1,5 +1,5 @@
 ---
-- ansible.builtin.import_playbook: ./janus.yml
+- ansible.builtin.import_playbook: ./ansible_raft.yml
   vars:
     post_processors_replacements:
       - match: "amq_broker[.]xsd"

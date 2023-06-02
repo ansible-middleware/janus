@@ -1,5 +1,5 @@
 ---
-- ansible.builtin.import_playbook: ./janus.yml
+- ansible.builtin.import_playbook: ./ansible_raft.yml
   vars:
     galaxy: 
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server
