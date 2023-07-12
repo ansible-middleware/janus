@@ -70,5 +70,5 @@ argument_specs:
             override_galaxy_version:
                 type: 'str'
                 required: no
-                default: None
+                default: ''
                 description: 'Set to override value of downstream version read from galaxy.yml'
