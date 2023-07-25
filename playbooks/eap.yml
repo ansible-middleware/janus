@@ -31,7 +31,7 @@
 
           redhat.eap collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
           If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
-          <https://github.com/ansible-middleware/keycloak/issues>
+          <https://github.com/ansible-middleware/wildfly/issues>
       - placeholder: rhn_credentials
         content: |
           ## Downloading products from the Customer Portal
