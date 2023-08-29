@@ -1,7 +1,7 @@
 ---
 - ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
-    upstream_name: infinspan
+    upstream_name: infinispan
     downstream_name: data_grid
     downstream_namespace: 'redhat'
     upstream_namespace: 'middleware_automation'
