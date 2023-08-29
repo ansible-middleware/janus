@@ -42,3 +42,8 @@ jobs:
           mkdir -p /home/runner/.ansible/
           ln -s /home/runner/work/janus/janus /home/runner/.ansible/collections
 
+      - name: Run linter
+        run: |
+          ansible-lint --version
+          ansible-lint -v
+        working-directory: ./ansible_collections/middleware_automation/janus
