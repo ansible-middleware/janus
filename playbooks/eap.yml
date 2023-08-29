@@ -1,6 +1,17 @@
 ---
-- ansible.builtin.import_playbook: janus.yml
+- ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
+    upstream_name: wildfly
+    downstream_name: eap
+    downstream_namespace: 'redhat'
+    upstream_namespace: 'middleware_automation'
+    project_git_url: https://github.com/ansible-middleware/wildfly.git
+    project_git_version: main
+
+    upstream_downstream_collections_map:
+      - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
+      - { upstream_name: 'middleware_automation.wildfly', downstream_name: 'redhat.eap' }
+
     post_processors_replacements:
      - match: "eap_install_workdir: /opt/eap"
        replace: "eap_install_workdir: /opt"
@@ -10,6 +21,7 @@
        replace: "wildfly-configuration:"
      - match: "repo1.maven.org/maven2/org/eap/prospero"
        replace: "repo1.maven.org/maven2/org/wildfly/prospero"
+
     galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform
       homepage: https://access.redhat.com/products/red-hat-jboss-enterprise-application-platform

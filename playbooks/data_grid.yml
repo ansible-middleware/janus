@@ -1,6 +1,15 @@
 ---
-- ansible.builtin.import_playbook: ./janus.yml
+- ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
+    upstream_name: infinspan
+    downstream_name: data_grid
+    downstream_namespace: 'redhat'
+    upstream_namespace: 'middleware_automation'
+    project_git_url: https://github.com/ansible-middleware/infinispan.git
+    project_git_version: main
+    upstream_downstream_collections_map:
+      - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
+    galaxy:
     post_processors_replacements:
       - match: "data_grid[.]service[.]j2"
         replace: "infinispan.service.j2"
@@ -30,7 +39,7 @@
       - match: "schemas[/]data_grid-"
         replace: "schemas/infinispan-"
         file: 'xml.j2$'
-    galaxy: 
+    galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_data_grid
       homepage: https://access.redhat.com/products/red-hat-data-grid
     # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
@@ -47,15 +56,15 @@
               ansible-galaxy collection install redhat.data_grid
       - placeholder: upstream_downstream
         content: |
-          This collection can be used to manage the Red Hat product [Red Hat DataGrid](https://www.redhat.com/en/technologies/jboss-middleware/data-grid), which can 
-          also be used as remote caches for [Red Hat Single Sign-On](https://access.redhat.com/products/red-hat-single-sign-on) or 
+          This collection can be used to manage the Red Hat product [Red Hat DataGrid](https://www.redhat.com/en/technologies/jboss-middleware/data-grid), which can
+          also be used as remote caches for [Red Hat Single Sign-On](https://access.redhat.com/products/red-hat-single-sign-on) or
           [Red Hat JBoss EAP](https://www.redhat.com/en/technologies/jboss-middleware/application-platform).
       - placeholder: support
         content: |
           ## Support
 
           redhat.data_grid collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
-          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on 
+          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
           <https://github.com/ansible-middleware/infinispan/issues>
       - placeholder: rhn_credentials
         content: |

@@ -1,4 +1,3 @@
 ---
 collections:
-  - name: community.general
-  - name: ansible.posix
+  - name: community.fqcn_migration
