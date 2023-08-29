@@ -1,38 +1,17 @@
 ---
 - ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
-    upstream_name: activemq
-    downstream_name: amq_broker
-    upstream_collection_name: amq
+    upstream_name: amq_streams
+    downstream_name: amq_streams
     downstream_namespace: redhat
     upstream_namespace: middleware_automation
-    project_git_url: https://github.com/ansible-middleware/amq.git
+    project_git_url: https://github.com/ansible-middleware/amq_streams.git
     project_git_version: main
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
-    post_processors_replacements:
-      - match: "amq_broker[.]xsd"
-        replace: "activemq.xsd"
-      - match: "org[.]apache[.]amq_broker[.]"
-        replace: "org.apache.activemq."
-      - match: "hawtio[.]realm=amq_broker"
-        replace: "hawtio.realm=activemq"
-        file: '[.]yml$'
-      - match: "amq_broker[.]org"
-        replace: "activemq.org"
-      - match: "redhat[.]amq(?!_broker)"
-        replace: "redhat.amq_broker"
-      - match: "urn:amq_broker"
-        replace: "urn:activemq"
-      - match: "- amq_broker"
-        replace: "- activemq"
-        file: "meta/main.yml$"
-      - match: "amq_broker[.]apache[.]org"
-        replace: "activemq.apache.org"
-        file: "README.md$"
     galaxy: 
-      documentation: https://access.redhat.com/documentation/en-us/red_hat_amq_broker
-      homepage: https://access.redhat.com/products/red-hat-amq
+      documentation: https://access.redhat.com/documentation/en-us/red_hat_amq_streams
+      homepage: https://access.redhat.com/products/red-hat-amq-streams
     # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
     downstream_placeholder_delete:
       - build_status
@@ -44,19 +23,19 @@
 
           Before using the collection, you need to setup Ansible Automation Hub as galaxy server; then install it via the CLI:
 
-              ansible-galaxy collection install redhat.amq_broker
+              ansible-galaxy collection install redhat.amq_streams
       - placeholder: support
         content: |
           ## Support
 
-          redhat.amq_broker collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
+          redhat.amq_streams collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
           If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on 
-          <https://github.com/ansible-middleware/amq/issues>
+          <https://github.com/ansible-middleware/amq_streams/issues>
       - placeholder: rhn_credentials
         content: |
           #### Downloading from the Customer Portal
 
-          The `amq_broker` role supports downloading and installing from the Red Hat Customer Portal using credentials associated to a service account. After having
+          The `amq_streams` role supports downloading and installing from the Red Hat Customer Portal using credentials associated to a service account. After having
           authenticated in the customer portal, navigate to the hybrid cloud console, and select the [services account tab](https://console.redhat.com/application-services/service-accounts)
           to create one, if needed. Client ID and Client Secret associated to the service account need to be provided to the collection using the following variables:
           ```
