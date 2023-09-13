@@ -5,49 +5,11 @@
     downstream_name: jbcs
     downstream_namespace: 'redhat'
     upstream_namespace: 'middleware_automation'
-    project_git_url: "https://github.com/ansible-middleware/{{ upstream_name }}.git"
+    project_git_url: https://github.com/ansible-middleware/jbcs.git
     project_git_version: main
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
-    galaxy: 
+      - { upstream_name: 'middleware_automation.jbcs', downstream_name: 'redhat.jbcs' }
+    galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_core_services
-      homepage: https://access.redhat.com/products/red-hat-jboss-core-services-collection
-    # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
-    downstream_placeholder_delete:
-      - build_status
-    # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
-    downstream_placeholder_content:
-      - placeholder: ansible_version
-        content: |
-          Red Hat has tested this collection against Ansible versions 2.9.10 or later.
-
-          Red Hat might test the plug-ins and modules that are within a collection with specific Ansible versions only. A collection can contain metadata that identifies these Ansible versions.
-      - placeholder: galaxy_download
-        content: |
-          For demonstration purposes, you can run the collection directly from this folder. However, the proper setup is to download and install the collection from the Red Hat Automation Hub.
-          
-          Before you install the collection, you must ensure that your system complies with the following prerequisites:
-            - You have installed the ansible-core package version 2.12 or later on a control node in your system by installing Red Hat Ansible Automation Platform 2.x.
-            - You have updated the ansible.cfg file to use the Red Hat Automation Hub as your *primary source* of Ansible collections.
-          You can install the collection on your Ansible control node by using the following command:
-              $ ansible-galaxy collection install redhat.jbcs
-      - placeholder: support
-        content: |
-          ## Support
-
-          redhat.jbcs collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
-          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on 
-          <https://github.com/ansible-middleware/jbcs/issues>
-      - placeholder: rhn_credentials
-        content: |
-          #### Downloading from the Customer Portal
-
-          The `redhat.jbcs.jbcs` role supports downloading and installing from the Red Hat Customer Portal using credentials associated to a service account. After
-          login in the customer portal and navigating to the hybrid cloud console, select the [services account tab](https://console.redhat.com/application-services/service-accounts)
-          to create one, if needed. Client ID and Client secret associated to the service account needs to be provided with the following variables are defined:
-          ```
-          rhn_username{{':'}} '<client_id>'
-          rhn_password{{':'}} '<client_secret>'
-          ```
-
-          The downloaded product archive will be stored in the controller working directory, and then distributed to target nodes.
+      homepage: https://access.redhat.com/documentation/en-us/red_hat_jboss_core_services/2.4.57
