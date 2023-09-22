@@ -9,7 +9,7 @@
     project_git_version: main
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
-    galaxy: 
+    galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_core_services
       homepage: https://access.redhat.com/products/red-hat-jboss-core-services-collection
     # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
@@ -25,7 +25,7 @@
       - placeholder: galaxy_download
         content: |
           For demonstration purposes, you can run the collection directly from this folder. However, the proper setup is to download and install the collection from the Red Hat Automation Hub.
-          
+
           Before you install the collection, you must ensure that your system complies with the following prerequisites:
             - You have installed the ansible-core package version 2.12 or later on a control node in your system by installing Red Hat Ansible Automation Platform 2.x.
             - You have updated the ansible.cfg file to use the Red Hat Automation Hub as your *primary source* of Ansible collections.
@@ -36,7 +36,7 @@
           ## Support
 
           redhat.jbcs collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
-          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on 
+          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
           <https://github.com/ansible-middleware/jbcs/issues>
       - placeholder: rhn_credentials
         content: |
