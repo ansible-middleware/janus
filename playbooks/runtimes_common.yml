@@ -6,7 +6,6 @@
     downstream_namespace: 'redhat'
     upstream_namespace: 'middleware_automation'
     project_git_url: "https://github.com/ansible-middleware/{{ upstream_name }}.git"
-    project_git_version: main
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
     post_processors_replacements:
@@ -31,7 +30,7 @@
       - placeholder: support
         content: |
           ## Support
-          
+
           redhat.runtimes_common collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
-          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on 
+          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
           <https://github.com/ansible-middleware/common/issues>

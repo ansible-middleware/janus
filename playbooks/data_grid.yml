@@ -6,7 +6,6 @@
     downstream_namespace: 'redhat'
     upstream_namespace: 'middleware_automation'
     project_git_url: https://github.com/ansible-middleware/infinispan.git
-    project_git_version: main
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
     post_processors_replacements:
