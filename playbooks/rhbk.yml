@@ -55,6 +55,8 @@
     galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_single_sign-on
       homepage: https://access.redhat.com/products/red-hat-single-sign-on
+    excluded_files_from_collections:
+      - roles/keycloak
     # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
     downstream_placeholder_delete:
       - build_status
