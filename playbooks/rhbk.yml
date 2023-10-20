@@ -1,7 +1,7 @@
 ---
 - ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
-    upstream_name: keycloak
+    upstream_name: keycloak_quarkus
     downstream_name: rhbk
     upstream_collection_name: keycloak
     downstream_namespace: redhat
