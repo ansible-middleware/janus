@@ -58,8 +58,16 @@
     # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
     downstream_placeholder_delete:
       - build_status
+      - roles_paths
     # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content:
+      - placeholder: roles_paths
+        content: |
+          ### Included roles
+
+          * [`keycloak`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/sso/content/role/sso/): role for installing the service.
+          * [`keycloak_realm`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/sso/content/role/sso_realm/): role for configuring a realm, user federation(s), clients and users, in an installed service.
+          * [`keycloak_quarkus`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/sso/content/role/sso_quarkus/): role for installing the quarkus variant of keycloak (>= 17.0.0).
       - placeholder: ansible_version
         content: |
           Red Hat has tested this collection against Ansible versions 2.13.0 or later.
