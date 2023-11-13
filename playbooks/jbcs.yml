@@ -16,6 +16,11 @@
       - build_status
     # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content:
+      - placeholder: roles_paths
+        content: |
+          ### Included roles
+
+          * [`jbcs`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/jbcs/content/role/jbcs/): role for installing the service.
       - placeholder: ansible_version
         content: |
           Red Hat has tested this collection against Ansible versions 2.13.0 or later.

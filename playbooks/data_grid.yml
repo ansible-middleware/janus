@@ -45,6 +45,12 @@
       - build_status
     # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content:
+      - placeholder: roles_paths
+        content: |
+          ### Included roles
+
+          * [`data_grid`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/data_grid/content/role/data_grid/): performs an installation of Infinispan or DataGrid nodes or cluster, with configuration of static caches.
+          * [`data_grid_cache`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/data_grid/content/role/data_grid_cache/): creates Infinispan or DataGrid caches at runtime.
       - placeholder: galaxy_download
         content: |
           ### Installing the Collection from Automation Hub

@@ -31,6 +31,15 @@
       - build_status
     # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content:
+      - placeholder: roles_paths
+        content: |
+          ### Roles
+          * [eap_install](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/eap/content/role/eap_install/): download and install
+          * [eap_systemd](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/eap/content/role/eap_systemd/): configure systemd unit
+          * [eap_driver](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/eap/content/role/eap_driver/): install additional driver modules (ie. JDBC)
+          * [eap_utils](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/eap/content/role/eap_utils/): utilities related to EAP
+          * [eap_validation](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/eap/content/role/eap_validation/): validate deployed installation
+          * [eap_uninstall](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/eap/content/role/eap_uninstall/): restore status pre wildfly_install
       - placeholder: galaxy_download
         content: |
           ### Installing the Collection from Automation Hub
