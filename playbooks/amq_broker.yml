@@ -21,6 +21,7 @@
         replace: "activemq.org"
       - match: "^amq_broker [{]"
         replace: "activemq {"
+        file: "login.config.j2$"
       - match: "redhat[.]amq(?!_broker)"
         replace: "redhat.amq_broker"
       - match: "urn:amq_broker"
