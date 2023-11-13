@@ -15,18 +15,8 @@
     # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
     downstream_placeholder_delete:
       - build_status
-      - role_content
     # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content:
-      - placeholder: role_content
-        content: |
-          - The [jws](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/jws/content/role/jws/) role contains the Ansible playbook and handles the following automated tasks:
-              - Ensures that a Java Development Kit (JDK) is installed on your target hosts
-              - Installs the basic packages that a JBoss Web Server installation requires
-              - Creates a JBoss Web Server user account and group
-              - Installs JBoss Web Server from product archive files or RPM packages
-              - Assigns ownership of the JBoss Web Server directories to the appropriate user account and group
-              - Deploys the `server.xml`, `web.xml`, and `context.xml` files
       - placeholder: ansible_version
         content: |
           Red Hat has tested this collection against Ansible versions 2.14.0 or later.
