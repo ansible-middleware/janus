@@ -19,6 +19,8 @@
         file: '[.]yml$'
       - match: "amq_broker[.]org"
         replace: "activemq.org"
+      - match: "^amq_broker [{]"
+        replace: "activemq {"
       - match: "redhat[.]amq(?!_broker)"
         replace: "redhat.amq_broker"
       - match: "urn:amq_broker"
