@@ -25,7 +25,7 @@
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform
       homepage: https://access.redhat.com/products/red-hat-jboss-enterprise-application-platform
     # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
-    excluded_files_from_collections:
+    excluded_roles_from_sownstream:
       - roles/wildfly_subs
     downstream_placeholder_delete:
       - build_status

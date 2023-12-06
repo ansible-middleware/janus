@@ -1,62 +1,26 @@
 ---
-- ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
+- name: "FQCN migration process (1)"
+  hosts: localhost
+  gather_facts: no
   vars:
-    upstream_name: keycloak
+    upstream_name: keycloak_quarkus
     downstream_name: rhbk
     upstream_collection_name: keycloak
     downstream_namespace: redhat
     upstream_namespace: middleware_automation
+    downstream_projects_dir: ./intermediate
+    downstream_project: "{{ lookup('env', 'PWD') }}/intermediate/rhbk"
+    project_root_folder: "{{ lookup('env', 'PWD') }}/upstream/keycloak.git"
+    excluded_roles_from_downstream:
+      - roles/keycloak
     project_git_url: https://github.com/ansible-middleware/keycloak.git
+    project_git_version: main
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
-    post_processors_replacements:
-      - match: "sso[.]service[.]j2"
-        replace: "keycloak.service.j2"
-        file: 'systemd[.]yml$'
-      - match: "sso-sysconfig[.]j2"
-        replace: "keycloak-sysconfig.j2"
-        file: 'systemd[.]yml$'
-      - match: "sso-service[.]sh[.]j2"
-        replace: "keycloak-service.sh.j2"
-        file: 'systemd[.]yml$'
-      - match: 'cache-container name="sso"( modules="org[.]sso[.]sso-model-infinispan")?'
-        replace: 'cache-container name="keycloak" modules="org.keycloak.keycloak-model-infinispan"'
-        file: 'xml.j2$'
-      - match: "org[.]sso[.]"
-        replace: "org.keycloak."
-      - match: "sso[.]org"
-        replace: "keycloak.org"
-      - match: "sso-server-subsystem"
-        replace: "keycloak-server-subsystem"
-        file: 'xml.j2$'
-      - match: "[$][{]sso[.]"
-        replace: "${keycloak."
-      - match: "urn:jboss:domain:sso-server:1[.]1"
-        replace: "urn:jboss:domain:keycloak-server:1.1"
-        file: 'xml.j2$'
-      - match: "start_sso[.]yml"
-        replace: "start_keycloak.yml"
-        file: '[.]yml$'
-      - match: "stop_sso[.]yml"
-        replace: "stop_keycloak.yml"
-        file: '[.]yml$'
-      - match: "java:jboss/infinispan/container/sso"
-        replace: "java:jboss/infinispan/container/keycloak"
-        file: 'xml.j2$'
-      - match: 'local-cache name="sso"'
-        replace: 'local-cache name="keycloak"'
-        file: 'xml.j2$'
-      - match: 'sso-database-update[.]sql'
-        replace: 'keycloak-database-update.sql'
-        file: 'xml.j2$'
-      - match: '/bin/add-user-sso'
-        replace: '/bin/add-user-keycloak'
-        file: 'main[.]yml$'
+    post_processors_replacements: []
     galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_single_sign-on
       homepage: https://access.redhat.com/products/red-hat-single-sign-on
-    excluded_files_from_collections:
-      - roles/keycloak
     # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
     downstream_placeholder_delete:
       - build_status
@@ -89,3 +53,83 @@
           ```
 
           The downloaded product archive will be stored in the controller working directory, and then distributed to target nodes.
+
+  pre_tasks:
+    - name: "Git clone {{ project_git_url }} into {{ lookup('env', 'PWD') }}/upstream/keycloak.git"
+      ansible.builtin.include_role:
+        name: community.fqcn_migration.git
+        tasks_from: clone.yml
+
+  tasks:
+    - ansible.builtin.include_role:
+        name: community.fqcn_migration.fqcn_migration
+      tags: always
+
+- name: "FQCN migration process (2)"
+  hosts: localhost
+  gather_facts: no
+  vars:
+    upstream_name: keycloak
+    downstream_name: rhbk
+    downstream_namespace: redhat
+    upstream_namespace: redhat
+    downstream_projects_dir: ./downstream
+    downstream_project: "{{ lookup('env', 'PWD') }}/downstream/rhbk"
+    project_root_folder: "{{ lookup('env', 'PWD') }}/intermediate/rhbk"
+    upstream_projects_dir: "{{ workdir }}/intermediate"
+    upstream_downstream_collections_map:
+      - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
+    post_processors_replacements: []
+    galaxy:
+      documentation: https://access.redhat.com/documentation/en-us/red_hat_single_sign-on
+      homepage: https://access.redhat.com/products/red-hat-single-sign-on
+    # anything inside <!--start {{ <downstream_placeholder>_delete }} --> and <!--end {{ <downstream_placeholder>_delete }} --> will be removed
+    downstream_placeholder_delete:
+      - build_status
+    # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
+    downstream_placeholder_content:
+      - placeholder: galaxy_download
+        content: |
+          ### Installing the Collection from Automation Hub
+
+          Before using the collection, you need to setup Ansible Automation Hub as galaxy server; then install it via the CLI:
+
+              ansible-galaxy collection install redhat.rhbk
+      - placeholder: support
+        content: |
+          ## Support
+
+          redhat.rhbk collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
+          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
+          <https://github.com/ansible-middleware/keycloak/issues>
+      - placeholder: rhn_credentials
+        content: |
+          #### Downloading from the Customer Portal
+
+          The `rhbk` role supports downloading and installing from the Red Hat Customer Portal using credentials associated to a service account. After having
+          authenticated in the customer portal, navigate to the hybrid cloud console, and select the [services account tab](https://console.redhat.com/application-services/service-accounts)
+          to create one, if needed. Client ID and Client Secret associated to the service account need to be provided to the collection using the following variables:
+          ```
+          rhn_username{{':'}} '<client_id>'
+          rhn_password{{':'}} '<client_secret>'
+          ```
+
+          The downloaded product archive will be stored in the controller working directory, and then distributed to target nodes.
+
+  tasks:
+    - ansible.builtin.include_role:
+        name: community.fqcn_migration.fqcn_migration
+      tags: always
+
+  post_tasks:
+    - name: "Perform release (if requested): {{ release_version == '' | ternary('no release version provided', release_version) }}."
+      ansible.builtin.include_role:
+        name: fqcn_migration
+        tasks_from: release.yml
+      when:
+        - release_version is defined and release_version != ""
+
+    - name: "Build collection for {{ downstream_name }}"
+      ansible.builtin.command: ansible-galaxy collection build .
+      args:
+        chdir: "{{ downstream_project }}"
