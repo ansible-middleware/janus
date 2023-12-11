@@ -40,11 +40,63 @@
           redhat.rhbk collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
           If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
           <https://github.com/ansible-middleware/keycloak/issues> referring to the keycloak_quarkus role
+      - placeholder: rhbk_playbook
+        content: |
+          * The below example playbook can install based on the defined variables (using most defaults).
+          
+          ```
+          ---
+          - name: Playbook for rhbk Hosts
+            hosts: all
+            vars:
+              rhbk_admin_password: "remembertochangeme"
+            roles:
+              - redhat.rhbk.rhbk
+          ```
+          
+          Both playbooks include the `rhbk` role, with different settings, as described in the following sections.
+
+          For full service configuration details, refer to the [rhbk role README](https://github.com/ansible-middleware/keycloak/blob/main/roles/keycloak_quarkus/README.md).
       - placeholder: roles_paths
         content: |
           ### Included roles
           * [`rhbk`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhbk/content/role/rhbk/): role for installing the service.
           * [`rhbk_realm`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhbk/content/role/rhbk_realm/): role for configuring a realm, user federation(s), clients and users, in an installed service.
+      - placeholder: rhbk_realm_playbook
+        content: |
+          The below example playbook can creates or updates provided realm, user federation(s), client(s), client role(s) and client user(s).
+          
+          ```
+          ---
+          - name: Playbook for rhbk Hosts
+            hosts: all
+            vars:
+              rhbk_admin_password: "remembertochangeme"
+              rhbk_clients:
+                - name: TestClient1
+                  client_id: TestClient1
+                  roles:
+                    - TestClient1Admin
+                    - TestClient1User
+                  realm: TestRealm
+                  public_client: true
+                  web_origins:
+                    - http://testclient1origin/application
+                    - http://testclient1origin/other
+                  users:
+                    - username: TestUser
+                      password: password
+                      client_roles:
+                        - client: TestClient1
+                          role: TestClient1User
+                          realm: TestRealm
+            roles:
+              - role: redhat.rhbk.rhbk_realm
+                rhbk_realm: TestRealm
+          ```
+      - placeholder: rhbk_realm_readme
+        content: |
+          For full configuration details, refer to the [rhbk_realm role README](https://github.com/ansible-middleware/keycloak/blob/main/roles/keycloak_realm/README.md).
       - placeholder: rhn_credentials
         content: |
           #### Downloading from the Customer Portal
@@ -58,7 +110,10 @@
           ```
 
           The downloaded product archive will be stored in the controller working directory, and then distributed to target nodes.
-
+      - placeholder: license
+        content: |
+          See [LICENSE](https://github.com/ansible-middleware/keycloak/blob/main/LICENSE) to view the full text.
+          
   pre_tasks:
     - name: "Git clone {{ project_git_url }} into {{ lookup('env', 'PWD') }}/upstream/keycloak.git"
       ansible.builtin.include_role:
