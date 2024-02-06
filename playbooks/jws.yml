@@ -42,8 +42,8 @@
               $ ansible-galaxy collection install redhat.jws
       - placeholder: support
         content: |
-          The redhat.jws collection v{{ galaxy_version | default('0.0.0-dev') }} is released as the [Red Hat Ansible certified content collection for JBoss Web Server](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/jws) with Production Support. feature as the [Red Hat Ansible certified content collection for JBoss Web Server](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/jws). 
-          If you have any issues or questions related to this collection, please contact support at [Red Hat Customer Experience & Engagement](https://access.redhat.com/support/). Alternatively 
+          The redhat.jws collection v{{ galaxy_version | default('0.0.0-dev') }} is released as the [Red Hat Ansible certified content collection for JBoss Web Server](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/jws) with [Production Support](https://access.redhat.com/support/offerings/production).
+          If you have any issues or questions related to this collection, please contact support at [Red Hat Customer Experience & Engagement](https://access.redhat.com/support/). Alternatively
           contact the community by opening an issue at https://github.com/ansible-middleware/jws/issues.
 
           For more information about using this collection, see [Installing JBoss Web Server by using the Red Hat Ansible Certified Content Collection](https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server/5.7/html-single/installing_jboss_web_server_by_using_the_red_hat_ansible_certified_content_collection/index).
