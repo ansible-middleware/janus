@@ -46,7 +46,7 @@
           If you have any issues or questions related to this collection, please contact support at [Red Hat Customer Experience & Engagement](https://access.redhat.com/support/). Alternatively
           contact the community by opening an issue at https://github.com/ansible-middleware/jws/issues.
 
-          For more information about using this collection, see [Installing JBoss Web Server by using the Red Hat Ansible Certified Content Collection](https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server/5.7/html-single/installing_jboss_web_server_by_using_the_red_hat_ansible_certified_content_collection/index).
+          For more information about using this collection, see [Installing JBoss Web Server by using the Red Hat Ansible Certified Content Collection](https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server/6.0/html-single/installing_jboss_web_server_by_using_the_red_hat_ansible_certified_content_collection/index).
       - placeholder: rhn_credentials
         content: |
           #### Downloading from the Customer Portal
