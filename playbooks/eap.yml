@@ -24,7 +24,7 @@
      - match: "eap_prospero_name: prospero"
        replace: "eap_prospero_name: jboss-eap-installation-manager"
      - match: "eap_prospero_version: 1.2.0.Final"
-       replace: "eap_prospero_version: 1.1.5.Final-redhat-00002"
+       replace: "eap_prospero_version: 1.1.6.Final-redhat-00001"
      - match: "eap_prospero_profile_name: eap"
        replace: "eap_prospero_profile_name: eap-8.0"
 
