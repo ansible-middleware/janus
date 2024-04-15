@@ -14,22 +14,12 @@
       - { upstream_name: 'middleware_automation.wildfly', downstream_name: 'redhat.eap' }
 
     post_processors_replacements:
-     - match: "eap_install_workdir: /opt/eap"
-       replace: "eap_install_workdir: /opt"
      - match: "eap[.]statistics-enabled"
        replace: "wildfly.statistics-enabled"
      - match: "eap-configuration:"
        replace: "wildfly-configuration:"
      - match: "repo1.maven.org/maven2/org/eap/prospero"
        replace: "repo1.maven.org/maven2/org/wildfly/prospero"
-     - match: "eap_prospero_name: prospero"
-       replace: "eap_prospero_name: jboss-eap-installation-manager"
-     - match: "eap_prospero_profile_name: eap"
-       replace: "eap_prospero_profile_name: eap-8.0"
-     - match: "/opt/wildfly-1/wildfly-31.0.1.Final/"
-       replace: "/opt/eap-1/jboss-eap-7.4/"
-
-
 
     galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform
