@@ -22,7 +22,10 @@
        replace: "repo1.maven.org/maven2/org/wildfly/prospero"
      - match: "files/wildfly-custom.xml"
        replace: "files/eap-custom.xml"
-
+     - match: "https://github.com/rpelisse/eap-quickstarts/releases/download/kitchensink_eap31_1.0/kitchensink.war"
+       replace: "https://github.com/rpelisse/wildfly-quickstarts/releases/download/kitchensink_wildfly26_1.0/kitchensink.war"
+     - match: "https://github.com/rpelisse/simple-servlet/releases/download/info_wfly31_1.2/info-1.2.war"
+       replace: "https://github.com/rpelisse/simple-servlet/releases/download/info_eap7.4_1.0/info-1.0.war"
     galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform
       homepage: https://access.redhat.com/products/red-hat-jboss-enterprise-application-platform
