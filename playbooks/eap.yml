@@ -1,6 +1,7 @@
 ---
 - ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
+    override_galaxy_version: 1.5.3
     upstream_name: wildfly
     downstream_name: eap
     downstream_namespace: 'redhat'
