@@ -14,6 +14,24 @@
       - { upstream_name: 'middleware_automation.wildfly', downstream_name: 'redhat.eap' }
 
     post_processors_replacements:
+     - match: "^eap_"
+       replace: "EAP_"
+       file: 'templates/wfly.conf.j2'
+     - match: 'eap_SERVER_CONFIG'
+       replace: 'EAP_SERVER_CONFIG'
+       file: templates/wfly.service.j2
+     - match: 'eap_BIND'
+       replace: 'EAP_BIND'
+       file: templates/wfly.service.j2
+     - match: 'eap_BIND_MGMT'
+       replace: 'EAP_BIND_MGMT'
+       file: templates/wfly.service.j2
+     - match: 'eap_YAML'
+       replace: 'EAP_YAML'
+       file: templates/wfly.service.j2
+     - match: 'eap_OPTS'
+       replace: 'EAP_OPTS'
+       file: templates/wfly.service.j2
      - match: "eap[.]statistics-enabled"
        replace: "wildfly.statistics-enabled"
      - match: "eap-configuration:"
