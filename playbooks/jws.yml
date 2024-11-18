@@ -18,9 +18,6 @@
       - build_status
     # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content:
-      - placeholder: role_content
-        content: |
-
       - placeholder: ansible_version
         content: |
           Red Hat has tested this collection against Ansible versions 2.14.0 or later.
