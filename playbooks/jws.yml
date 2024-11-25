@@ -29,10 +29,6 @@
       - placeholder: ansible_version
         content: |
           Red Hat supports the most recent version of redhat.jws collection on Ansible Automation Platform 2.5 / ansible-core 2.16.
-
-          The collection is continuously tested on Ansible version 2.14 or later. Red Hat might test the plug-ins and modules that are within a collection
-          with specific Ansible versions only. A collection can contain metadata that identifies these Ansible versions, and a warning message will
-          be printed if the collection is executed on not supported versions of Ansible.
       - placeholder: galaxy_download
         content: |
           For demonstration purposes, you can run the collection directly from this folder. However, the proper setup is to download and install the collection from the Red Hat Automation Hub.
