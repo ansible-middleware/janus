@@ -34,6 +34,8 @@
      - match: "eap_apply_cp: [tT]rue"
        replace: "eap_apply_cp: false"
        file: "defaults/main.yml$"
+     - match: "32.0.0.Beta1"
+       replace: "8.0.0" 
     galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform
       homepage: https://access.redhat.com/products/red-hat-jboss-enterprise-application-platform
