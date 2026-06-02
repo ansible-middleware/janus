@@ -1,0 +1,82 @@
+---
+# Janus wrapper around community.fqcn_migration.fqcn_migration — applies Jenkins RELEASE_NAME
+# to downstream galaxy.yml before release/commit and collection build.
+- name: FQCN migration process
+  hosts: localhost
+  gather_facts: false
+  vars:
+    release_version: "{{ lookup('env', 'RELEASE_NAME') | default('', true) }}"
+    override_galaxy_version: "{{ lookup('env', 'RELEASE_NAME') | default('', true) }}"
+    gitdescribe_galaxy_version: "{{ true if lookup('env', 'RELEASE_NAME') == '' else false }}"
+    downstream_repository_host_env_varname: 'INTERNAL_GIT_REPOSITORY_URL'
+    skip_setup: true
+    workdir: "{{ lookup('env', 'PWD') }}"
+    upstream_projects_dir: "{{ workdir }}/upstream"
+    downstream_projects_dir: "{{ workdir }}/downstream"
+
+  pre_tasks:
+    - name: Display release version (if provided).
+      ansible.builtin.debug:
+        var: release_version
+      when:
+        - release_version is defined
+        - release_version | length > 0
+
+    - name: Ensure all required parameters have been provided
+      tags: always
+      ansible.builtin.assert:
+        that:
+          - downstream_name is defined
+          - upstream_name is defined
+          - project_git_url is defined
+        quiet: true
+        fail_msg: "Missing required parameter(s)."
+
+    - name: Determine full path to project folder (if not provided).
+      tags: always
+      ansible.builtin.set_fact:
+        project_root_folder: "{{ workdir }}/upstream/{{ upstream_name }}.git"
+      when:
+        - project_root_folder is not defined
+        - upstream_name is defined
+
+    - name: Define path to downstream project
+      tags: always
+      ansible.builtin.set_fact:
+        downstream_project: "{{ downstream_projects_dir }}/{{ downstream_name }}"
+
+    - name: Git clone {{ project_git_url }} [{{ project_git_version }}] into {{ project_root_folder }}
+      ansible.builtin.include_role:
+        name: community.fqcn_migration.git
+        tasks_from: clone.yml
+      when:
+        - project_root_folder is defined
+        - project_git_url is defined
+
+  tasks:
+    - name: Run FQCN migration
+      ansible.builtin.include_role:
+        name: community.fqcn_migration.fqcn_migration
+      tags: always
+
+    - name: Set downstream galaxy.yml version from RELEASE_NAME
+      ansible.builtin.replace:
+        path: "{{ downstream_project }}/galaxy.yml"
+        regexp: '^version: .*'
+        replace: 'version: "{{ override_galaxy_version }}"'
+      when: override_galaxy_version | length > 0
+
+  post_tasks:
+    - name: "Perform release (if requested): {{ release_version == '' | ternary('no release version provided', release_version) }}."
+      ansible.builtin.include_role:
+        name: community.fqcn_migration.fqcn_migration
+        tasks_from: release.yml
+      when:
+        - release_version is defined
+        - release_version != ""
+        - release_version != "TEST"
+
+    - name: Build collection for {{ downstream_name }}
+      ansible.builtin.command: ansible-galaxy collection build .
+      args:
+        chdir: "{{ downstream_project }}"

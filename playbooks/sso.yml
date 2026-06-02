@@ -123,6 +123,7 @@
     downstream_repository_host_env_varname: 'INTERNAL_GIT_REPOSITORY_URL'
     skip_setup: true
     release_version: "{{ lookup('env', 'RELEASE_NAME') | default('', true) }}"
+    override_galaxy_version: "{{ lookup('env', 'RELEASE_NAME') | default('', true) }}"
     upstream_name: keycloak
     downstream_name: sso
     upstream_collection_name: "{{ lookup('env', 'UPSTREAM_COLLECTION_NAME') | default(upstream_name, true) }}"
@@ -394,6 +395,13 @@
       args:
         chdir: "{{ downstream_project }}"
       when: sso_downstream_git.stat.exists | default(false)
+
+    - name: Set downstream galaxy.yml version from RELEASE_NAME
+      ansible.builtin.replace:
+        path: "{{ downstream_project }}/galaxy.yml"
+        regexp: '^version: .*'
+        replace: 'version: "{{ override_galaxy_version }}"'
+      when: override_galaxy_version | length > 0
 
   post_tasks:
     - name: "Perform release (if requested): {{ release_version == '' | ternary('no release version provided', release_version) }}."
