@@ -1,3 +1,4 @@
 ---
 collections:
   - name: community.fqcn_migration
+    version: "1.0.14"

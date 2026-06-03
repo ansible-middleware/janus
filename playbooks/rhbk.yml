@@ -15,6 +15,8 @@
       - roles/keycloak
     project_git_url: "{{ lookup('env', 'GIT_REPOSITORY_URL') | default('https://github.com/ansible-middleware/keycloak.git', true) }}"
     project_git_version: "{{ lookup('env', 'GIT_REPOSITORY_BRANCH') | default('main', true) }}"
+    release_version: "{{ lookup('env', 'RELEASE_NAME') | default('', true) }}"
+    override_galaxy_version: "{{ lookup('env', 'RELEASE_NAME') | default('', true) }}"
     gitdescribe_galaxy_version: "{{ true if lookup('env', 'RELEASE_NAME') == '' else false }}"
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
@@ -38,6 +40,13 @@
         name: community.fqcn_migration.fqcn_migration
       tags: always
 
+    - name: Set downstream galaxy.yml version from RELEASE_NAME
+      ansible.builtin.replace:
+        path: "{{ downstream_project }}/galaxy.yml"
+        regexp: '^version: .*'
+        replace: 'version: "{{ override_galaxy_version }}"'
+      when: override_galaxy_version | length > 0
+
 - name: "FQCN migration process (2)"
   hosts: localhost
   gather_facts: no
@@ -46,6 +55,10 @@
     downstream_name: rhbk
     downstream_namespace: redhat
     upstream_namespace: redhat
+    release_version: "{{ lookup('env', 'RELEASE_NAME') | default('', true) }}"
+    override_galaxy_version: "{{ lookup('env', 'RELEASE_NAME') | default('', true) }}"
+    gitdescribe_galaxy_version: "{{ true if lookup('env', 'RELEASE_NAME') == '' else false }}"
+    downstream_repository_host_env_varname: 'INTERNAL_GIT_REPOSITORY_URL'
     downstream_projects_dir: ./downstream
     downstream_project: "{{ lookup('env', 'PWD') }}/downstream/rhbk"
     project_root_folder: "{{ lookup('env', 'PWD') }}/intermediate/rhbk"
@@ -189,13 +202,22 @@
         name: community.fqcn_migration.fqcn_migration
       tags: always
 
+    - name: Set downstream galaxy.yml version from RELEASE_NAME
+      ansible.builtin.replace:
+        path: "{{ downstream_project }}/galaxy.yml"
+        regexp: '^version: .*'
+        replace: 'version: "{{ override_galaxy_version }}"'
+      when: override_galaxy_version | length > 0
+
   post_tasks:
     - name: "Perform release (if requested): {{ release_version == '' | ternary('no release version provided', release_version) }}."
       ansible.builtin.include_role:
-        name: fqcn_migration
+        name: community.fqcn_migration.fqcn_migration
         tasks_from: release.yml
       when:
-        - release_version is defined and release_version != ""
+        - release_version is defined
+        - release_version != ""
+        - release_version != "TEST"
 
     - name: "Build collection for {{ downstream_name }}"
       ansible.builtin.command: ansible-galaxy collection build .
