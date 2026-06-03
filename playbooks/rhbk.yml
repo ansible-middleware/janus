@@ -20,6 +20,7 @@
     gitdescribe_galaxy_version: "{{ true if lookup('env', 'RELEASE_NAME') == '' else false }}"
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
+      - { upstream_name: 'middleware_automation.infinispan', downstream_name: 'middleware_automation.infinispan' }
     post_processors_replacements: []
     galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_build_of_keycloak/
@@ -66,15 +67,19 @@
     upstream_projects_dir: "{{ workdir }}/intermediate"
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
+      - { upstream_name: 'middleware_automation.infinispan', downstream_name: 'middleware_automation.infinispan' }
     post_processors_replacements:
-      - match: "rhbk[.]service[.]j2"
-        replace: "keycloak.service.j2"
-        file: 'systemd[.]yml$'
-      - match: "rhbk-sysconfig[.]j2"
-        replace: "keycloak-sysconfig.j2"
-        file: 'systemd[.]yml$'
+      - match: "26.6.2"
+        replace: "26.4.11"
+      - match: "26.6.1"
+        replace: "26.4.10"
       - match: "- rhbk[.]conf"
         replace: "- keycloak.conf"
+      - match: "rhbk[.]conf"
+        replace: "keycloak.conf"
+        file: 'main[.]yml$'
+      - match: "keycloak[.]config_key_store_enabled"
+        replace: "rhbk.config_key_store_enabled"
         file: 'main[.]yml$'
       - match: "rhbk[.]fact"
         replace: "keycloak.fact"
@@ -93,6 +98,12 @@
       - match: "rhbk-kerberos-federation"
         replace: "keycloak-kerberos-federation"
         file: "converge.yml$"
+      - match: "infinispan_rhbk_caches"
+        replace: "infinispan_keycloak_caches"
+      - match: "infinispan_rhbk_persistence"
+        replace: "infinispan_keycloak_persistence"
+      - match: "redhat[.]infinispan"
+        replace: "middleware_automation.infinispan"
       - match: "red-hat-build-of-rhbk"
         replace: "red-hat-build-of-keycloak"
         file: "README.md$"
