@@ -1,5 +1,7 @@
 ---
-- ansible.builtin.import_playbook: fqcn_migration.yml
+- name: FQCN migration process
+  ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
+
   vars:
     upstream_name: amq_streams
     downstream_name: amq_streams

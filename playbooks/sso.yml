@@ -393,6 +393,7 @@
       args:
         chdir: "{{ downstream_project }}"
       when: sso_downstream_git.stat.exists | default(false)
+      changed_when: true
 
     - name: Set downstream galaxy.yml version from RELEASE_NAME
       ansible.builtin.replace:
@@ -411,7 +412,17 @@
         - release_version != ""
         - release_version != "TEST"
 
+    - name: "Read galaxy.yml to get collection version"
+      ansible.builtin.slurp:
+        src: "{{ downstream_project }}/galaxy.yml"
+      register: _galaxy_yml
+
+    - name: "Parse collection version from galaxy.yml"
+      ansible.builtin.set_fact:
+        _collection_version: "{{ (_galaxy_yml.content | b64decode | from_yaml).version }}"
+
     - name: Build collection for {{ downstream_name }}
       ansible.builtin.command: ansible-galaxy collection build .
       args:
         chdir: "{{ downstream_project }}"
+        creates: "{{ downstream_namespace }}-{{ downstream_name }}-{{ _collection_version }}.tar.gz"

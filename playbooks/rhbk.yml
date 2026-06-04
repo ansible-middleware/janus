@@ -30,13 +30,14 @@
     # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content: []
   pre_tasks:
-    - name: "Git clone {{ project_git_url }} into {{ lookup('env', 'PWD') }}/upstream/keycloak.git"
+    - name: "Git clone into upstream/keycloak.git from {{ project_git_url }}"
       ansible.builtin.include_role:
         name: community.fqcn_migration.git
         tasks_from: clone.yml
 
   tasks:
-    - ansible.builtin.include_role:
+    - name: Run FQCN migration
+      ansible.builtin.include_role:
         name: community.fqcn_migration.fqcn_migration
       tags: always
 
@@ -196,7 +197,8 @@
         content: |
           Create realms and clients in [Red Hat Build of Keycloak](https://access.redhat.com/products/red-hat-build-of-keycloak).
   tasks:
-    - ansible.builtin.include_role:
+    - name: Run FQCN migration
+      ansible.builtin.include_role:
         name: community.fqcn_migration.fqcn_migration
       tags: always
 
@@ -217,7 +219,17 @@
         - release_version != ""
         - release_version != "TEST"
 
+    - name: "Read galaxy.yml to get collection version"
+      ansible.builtin.slurp:
+        src: "{{ downstream_project }}/galaxy.yml"
+      register: _galaxy_yml
+
+    - name: "Parse collection version from galaxy.yml"
+      ansible.builtin.set_fact:
+        _collection_version: "{{ (_galaxy_yml.content | b64decode | from_yaml).version }}"
+
     - name: "Build collection for {{ downstream_name }}"
       ansible.builtin.command: ansible-galaxy collection build .
       args:
         chdir: "{{ downstream_project }}"
+        creates: "{{ downstream_namespace }}-{{ downstream_name }}-{{ _collection_version }}.tar.gz"

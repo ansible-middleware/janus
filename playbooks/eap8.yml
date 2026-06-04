@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
+- name: FQCN migration process
+  ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
     upstream_name: wildfly
     downstream_name: eap
