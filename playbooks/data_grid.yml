@@ -10,6 +10,8 @@
     gitdescribe_galaxy_version: "{{ true if lookup('env', 'RELEASE_NAME') == '' else false }}"
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
+    excluded_paths_from_downstream:
+      - molecule/vector-search
     post_processors_replacements:
       - match: "data_grid[.]service[.]j2"
         replace: "infinispan.service.j2"
