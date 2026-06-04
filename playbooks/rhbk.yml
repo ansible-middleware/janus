@@ -118,8 +118,6 @@
           * [`rhbk_realm`](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/rhbk/content/role/rhbk_realm/): role for configuring a realm, user federation(s), clients and users, in an installed service.
       - placeholder: support
         content: |
-          ## Support
-
           redhat.rhbk collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
           If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
           <https://github.com/ansible-middleware/keycloak/issues> referring to the keycloak_quarkus role

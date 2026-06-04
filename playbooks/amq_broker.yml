@@ -56,9 +56,7 @@
               ansible-galaxy collection install redhat.amq_broker
       - placeholder: support
         content: |
-          ## Support
-
-          redhat.amq_broker collection v{{ galaxy_version | default('0.0.0-dev') }} is released as the [Red Hat Ansible certified content collection for JBoss Web Server](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/jws) with [Production Support](https://access.redhat.com/support/offerings/production).
+          redhat.amq_broker collection v{{ galaxy_version | default('0.0.0-dev') }} is released as the [Red Hat Ansible certified content collection for AMQ Broker](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/amq_broker) with [Production Support](https://access.redhat.com/support/offerings/production).
           If you have any issues or questions related to this collection, please contact support at [Red Hat Customer Experience & Engagement](https://access.redhat.com/support/).
       - placeholder: rhn_credentials
         content: |

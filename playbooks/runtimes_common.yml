@@ -40,8 +40,6 @@
               ansible-galaxy collection install redhat.runtimes_common
       - placeholder: support
         content: |
-          ## Support
-
           redhat.runtimes_common collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
           If you have any issues or questions related to this collection, please contact support at [Red Hat Customer
           Experience & Engagement](https://access.redhat.com/support/).
