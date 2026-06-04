@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
+- name: FQCN migration process
+  ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
     upstream_name: wildfly
     downstream_name: eap
@@ -88,9 +89,9 @@
         content: |
           ## Support
 
-          redhat.eap collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
-          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
-          <https://github.com/ansible-middleware/wildfly/issues>
+          As Red Hat Ansible Certified Content, this collection is entitled to support through the Ansible Automation Platform (AAP) using the **Create issue** button on the top right corner.
+
+          If a support case cannot be opened with Red Hat and the collection has been obtained either from Galaxy or GitHub, there may be community help available on the [Ansible Forum](https://forum.ansible.com/).
       - placeholder: rhn_credentials
         content: |
           ## Downloading products from the Customer Portal

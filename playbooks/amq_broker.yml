@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.import_playbook: fqcn_migration.yml
+- name: FQCN migration process
+  ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
   vars:
     upstream_name: activemq
     downstream_name: amq_broker
@@ -58,8 +59,9 @@
         content: |
           ## Support
 
-          redhat.amq_broker collection v{{ galaxy_version | default('0.0.0-dev') }} is released as the [Red Hat Ansible certified content collection for JBoss Web Server](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/jws) with [Production Support](https://access.redhat.com/support/offerings/production).
-          If you have any issues or questions related to this collection, please contact support at [Red Hat Customer Experience & Engagement](https://access.redhat.com/support/).
+          As Red Hat Ansible Certified Content, this collection is entitled to support through the Ansible Automation Platform (AAP) using the **Create issue** button on the top right corner.
+
+          If a support case cannot be opened with Red Hat and the collection has been obtained either from Galaxy or GitHub, there may be community help available on the [Ansible Forum](https://forum.ansible.com/).
       - placeholder: rhn_credentials
         content: |
           #### Downloading from the Customer Portal

@@ -30,13 +30,14 @@
     # anything inside <!--start {{ <downstream_placeholder>_content }} --> and <!--end {{ <downstream_placeholder>_content }} --> will be replaced with content
     downstream_placeholder_content: []
   pre_tasks:
-    - name: "Git clone {{ project_git_url }} into {{ lookup('env', 'PWD') }}/upstream/keycloak.git"
+    - name: "Git clone into upstream/keycloak.git from {{ project_git_url }}"
       ansible.builtin.include_role:
         name: community.fqcn_migration.git
         tasks_from: clone.yml
 
   tasks:
-    - ansible.builtin.include_role:
+    - name: Run FQCN migration
+      ansible.builtin.include_role:
         name: community.fqcn_migration.fqcn_migration
       tags: always
 
@@ -120,9 +121,9 @@
         content: |
           ## Support
 
-          redhat.rhbk collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
-          If you have any issues or questions related to collection, please don't hesitate to contact us on <Ansible-middleware-core@redhat.com> or open an issue on
-          <https://github.com/ansible-middleware/keycloak/issues> referring to the keycloak_quarkus role
+          As Red Hat Ansible Certified Content, this collection is entitled to support through the Ansible Automation Platform (AAP) using the **Create issue** button on the top right corner.
+
+          If a support case cannot be opened with Red Hat and the collection has been obtained either from Galaxy or GitHub, there may be community help available on the [Ansible Forum](https://forum.ansible.com/).
       - placeholder: rhn_credentials
         content: |
           #### Downloading from the Customer Portal
@@ -198,7 +199,8 @@
         content: |
           Create realms and clients in [Red Hat Build of Keycloak](https://access.redhat.com/products/red-hat-build-of-keycloak).
   tasks:
-    - ansible.builtin.include_role:
+    - name: Run FQCN migration
+      ansible.builtin.include_role:
         name: community.fqcn_migration.fqcn_migration
       tags: always
 
@@ -219,7 +221,17 @@
         - release_version != ""
         - release_version != "TEST"
 
+    - name: "Read galaxy.yml to get collection version"
+      ansible.builtin.slurp:
+        src: "{{ downstream_project }}/galaxy.yml"
+      register: _galaxy_yml
+
+    - name: "Parse collection version from galaxy.yml"
+      ansible.builtin.set_fact:
+        _collection_version: "{{ (_galaxy_yml.content | b64decode | from_yaml).version }}"
+
     - name: "Build collection for {{ downstream_name }}"
       ansible.builtin.command: ansible-galaxy collection build .
       args:
         chdir: "{{ downstream_project }}"
+        creates: "{{ downstream_namespace }}-{{ downstream_name }}-{{ _collection_version }}.tar.gz"
