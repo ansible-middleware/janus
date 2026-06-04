@@ -1,6 +1,6 @@
 ---
 - name: FQCN migration process
-  ansible.builtin.import_playbook: community.fqcn_migration.fqcn_migration
+  ansible.builtin.import_playbook: fqcn_migration.yml
   vars:
     upstream_name: infinispan
     downstream_name: data_grid
