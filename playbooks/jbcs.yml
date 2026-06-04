@@ -38,11 +38,9 @@
               $ ansible-galaxy collection install redhat.jbcs
       - placeholder: support
         content: |
-          ## Support
-
-          As Red Hat Ansible Certified Content, this collection is entitled to support through the Ansible Automation Platform (AAP) using the **Create issue** button on the top right corner.
-
-          If a support case cannot be opened with Red Hat and the collection has been obtained either from Galaxy or GitHub, there may be community help available on the [Ansible Forum](https://forum.ansible.com/).
+          redhat.jbcs collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
+          If you have any issues or questions related to this collection, please contact support at [Red Hat Customer
+          Experience & Engagement](https://access.redhat.com/support/).
 
       - placeholder: rhn_credentials
         content: |

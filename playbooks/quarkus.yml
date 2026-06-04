@@ -13,3 +13,20 @@
 
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
+    galaxy:
+      documentation: https://ansible-middleware.github.io/quarkus
+      homepage: https://github.com/ansible-middleware/quarkus
+    downstream_placeholder_delete:
+      - build_status
+    downstream_placeholder_content:
+      - placeholder: galaxy_download
+        content: |
+          ### Installing the Collection from Automation Hub
+
+          Before using the collection, you need to setup Ansible Automation Hub as galaxy server; then install it via the CLI:
+
+              ansible-galaxy collection install redhat.quarkus
+      - placeholder: support
+        content: |
+          redhat.quarkus collection v{{ galaxy_version | default('0.0.0-dev') }} is released as the [Red Hat Ansible certified content collection for Quarkus](https://console.redhat.com/ansible/automation-hub/repo/published/redhat/quarkus) with [Production Support](https://access.redhat.com/support/offerings/production).
+          If you have any issues or questions related to this collection, please contact support at [Red Hat Customer Experience & Engagement](https://access.redhat.com/support/).
