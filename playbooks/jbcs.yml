@@ -6,7 +6,7 @@
     downstream_name: jbcs
     downstream_namespace: 'redhat'
     upstream_namespace: 'middleware_automation'
-    project_git_url: "https://github.com/ansible-middleware/{{ upstream_name }}.git"
+    project_git_url: "{{ lookup('env', 'GIT_REPOSITORY_URL') | default('https://github.com/ansible-middleware/jbcs.git', true) }}"
     project_git_version: "{{ lookup('env', 'GIT_REPOSITORY_BRANCH') | default('main', true) }}"
     gitdescribe_galaxy_version: "{{ true if lookup('env', 'RELEASE_NAME') == '' else false }}"
     upstream_downstream_collections_map:
