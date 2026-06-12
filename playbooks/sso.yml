@@ -137,7 +137,14 @@
     upstream_downstream_collections_map:
       - { upstream_name: 'middleware_automation.common', downstream_name: 'redhat.runtimes_common' }
       - { upstream_name: 'middleware_automation.wildfly', downstream_name: 'redhat.eap' }
+      - { upstream_name: 'middleware_automation.infinispan', downstream_name: 'middleware_automation.infinispan' }
     post_processors_replacements:
+      - match: "infinispan_rhbk_caches"
+        replace: "infinispan_keycloak_caches"
+      - match: "infinispan_rhbk_persistence"
+        replace: "infinispan_keycloak_persistence"
+      - match: "redhat[.]infinispan"
+        replace: "middleware_automation.infinispan"
       # keycloak_quarkus role: convert content from keycloak to sso (templates and tasks)
       - match: "keycloak_quarkus_"
         replace: "sso_quarkus_"
