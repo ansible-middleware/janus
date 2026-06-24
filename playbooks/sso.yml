@@ -402,6 +402,17 @@
       when: sso_downstream_git.stat.exists | default(false)
       changed_when: true
 
+    # Remove plugins and molecule/keycloak_modules from downstream SSO (not needed for product)
+    - name: Remove plugins directory from downstream SSO
+      ansible.builtin.file:
+        path: "{{ downstream_project }}/plugins"
+        state: absent
+
+    - name: Remove molecule/keycloak_modules from downstream SSO
+      ansible.builtin.file:
+        path: "{{ downstream_project }}/molecule/keycloak_modules"
+        state: absent
+
     - name: Set downstream galaxy.yml version from RELEASE_NAME
       ansible.builtin.replace:
         path: "{{ downstream_project }}/galaxy.yml"

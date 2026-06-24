@@ -220,6 +220,17 @@
         replace: 'version: "{{ override_galaxy_version }}"'
       when: override_galaxy_version | length > 0
 
+    # Remove plugins and molecule/keycloak_modules from downstream RHBK (not needed for product)
+    - name: Remove plugins directory from downstream RHBK
+      ansible.builtin.file:
+        path: "{{ downstream_project }}/plugins"
+        state: absent
+
+    - name: Remove molecule/keycloak_modules from downstream RHBK
+      ansible.builtin.file:
+        path: "{{ downstream_project }}/molecule/keycloak_modules"
+        state: absent
+
   post_tasks:
     - name: "Perform release (if requested): {{ release_version == '' | ternary('no release version provided', release_version) }}."
       ansible.builtin.include_role:
