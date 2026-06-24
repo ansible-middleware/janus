@@ -1,0 +1,37 @@
+---
+# Verify http(s) links in downstream collection documentation respond successfully.
+# Scans README.md, galaxy.yml, docs/, and role metadata for broken URLs.
+#
+# Set SKIP_BROKEN_URL_CHECK=1 to bypass (local development only).
+
+- name: Determine collection root for broken URL check
+  ansible.builtin.set_fact:
+    broken_url_check_root: "{{ downstream_project }}"
+  when: broken_url_check_root is not defined
+
+- name: Ensure broken URL check script is available
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/scripts/check_broken_urls.py"
+  register: _broken_url_check_script
+
+- name: Fail when broken URL check script is missing
+  ansible.builtin.fail:
+    msg: "Missing Janus URL check script at {{ playbook_dir }}/scripts/check_broken_urls.py"
+  when: not _broken_url_check_script.stat.exists
+
+- name: Run broken URL check on downstream collection
+  ansible.builtin.command:
+    argv:
+      - "{{ ansible_playbook_python }}"
+      - "{{ playbook_dir }}/scripts/check_broken_urls.py"
+      - "{{ broken_url_check_root }}"
+      - --timeout
+      - "{{ broken_url_check_timeout | default(15) | string }}"
+      - --workers
+      - "{{ broken_url_check_workers | default(8) | string }}"
+  register: _broken_url_check
+  changed_when: false
+
+- name: Report broken URL check summary
+  ansible.builtin.debug:
+    msg: "{{ _broken_url_check.stdout_lines }}"

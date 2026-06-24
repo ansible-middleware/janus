@@ -1,0 +1,83 @@
+---
+# Verify the upstream project changelog documents the version being built.
+# Reads CHANGELOG.rst from the cloned upstream repo, not the Janus collection changelog.
+
+- name: Determine git-describe version from upstream repository
+  ansible.builtin.command:
+    argv: [git, -C, "{{ project_root_folder }}", describe, --tags, --always]
+  register: _upstream_git_describe
+  changed_when: false
+  failed_when: false
+  when:
+    - project_root_folder is defined
+    - override_galaxy_version | default('', true) | length == 0
+    - not (project_git_version | default('', true) | regex_search('^v?[0-9]+\.[0-9]+'))
+    - gitdescribe_galaxy_version | default(false) | bool
+
+- name: Set git describe version for changelog verification
+  ansible.builtin.set_fact:
+    git_describe_version: "{{ _upstream_git_describe.stdout }}"
+  when:
+    - _upstream_git_describe is defined
+    - _upstream_git_describe.rc == 0
+    - _upstream_git_describe.stdout | length > 0
+
+- name: Determine version to verify in upstream changelog
+  ansible.builtin.set_fact:
+    _changelog_version: >-
+      {%- if override_galaxy_version | default('', true) | length > 0 -%}
+      {{ override_galaxy_version | regex_replace('^v', '') }}
+      {%- elif project_git_version | default('', true) | regex_search('^v?[0-9]+\.[0-9]+') -%}
+      {{ project_git_version | regex_replace('^v', '') }}
+      {%- elif git_describe_version | default('', true) | length > 0 -%}
+      {{ git_describe_version | regex_replace('^v', '') | regex_replace('-.*', '') }}
+      {%- else -%}
+      {{ '' }}
+      {%- endif -%}
+
+- name: Check upstream changelog for version {{ _changelog_version }}
+  when:
+    - _changelog_version | length > 0
+    - _changelog_version not in ['TEST']
+  block:
+    - name: Locate upstream project changelog file
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: _upstream_changelog_candidates
+      loop:
+        - "{{ project_root_folder }}/CHANGELOG.rst"
+        - "{{ project_root_folder }}/docs/CHANGELOG.rst"
+
+    - name: Set upstream changelog path
+      ansible.builtin.set_fact:
+        _upstream_changelog_path: "{{ (_upstream_changelog_candidates.results | selectattr('stat.exists') | map(attribute='item') | list | first) | default('') }}"
+
+    - name: Warn when upstream changelog file is missing
+      ansible.builtin.debug:
+        msg: >-
+          WARNING: No changelog found for {{ downstream_name | default(upstream_name) }}
+          (checked CHANGELOG.rst and docs/CHANGELOG.rst under {{ project_root_folder }}).
+          Expected release notes for version {{ _changelog_version }}.
+      when: _upstream_changelog_path | length == 0
+
+    - name: Read upstream project changelog
+      ansible.builtin.slurp:
+        src: "{{ _upstream_changelog_path }}"
+      register: _upstream_changelog_content
+      when: _upstream_changelog_path | length > 0
+
+    - name: Verify upstream changelog contains release notes for {{ _changelog_version }}
+      ansible.builtin.set_fact:
+        _changelog_has_version: "{{ (_upstream_changelog_content.content | b64decode) is search('(?m)^v?' ~ (_changelog_version | regex_escape) ~ '\\s*$') }}"
+      when: _upstream_changelog_path | length > 0
+
+    - name: Warn when upstream changelog is missing version {{ _changelog_version }}
+      ansible.builtin.debug:
+        msg: >-
+          WARNING: Upstream changelog {{ _upstream_changelog_path }}
+          does not include release notes for version {{ _changelog_version }}
+          (project_git_version={{ project_git_version | default('undefined') }}).
+          Add a changelog fragment and run antsibull-changelog before building.
+      when:
+        - _upstream_changelog_path | length > 0
+        - not (_changelog_has_version | default(false))

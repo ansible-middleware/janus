@@ -1,0 +1,17 @@
+---
+# Janus quality checks run on downstream collections before build.
+# Included from fqcn_migration.yml and custom collection playbooks (sso, rhbk).
+#
+# Set SKIP_BROKEN_URL_CHECK=1 or SKIP_PARTNER_CERTIFICATION=1 to bypass individual checks.
+
+- name: Run broken URL check on downstream collection
+  ansible.builtin.include_tasks: check_broken_urls.yml
+  when:
+    - downstream_project is defined
+    - lookup('env', 'SKIP_BROKEN_URL_CHECK') | default('', true) | length == 0
+
+- name: Run partner certification checks on downstream collection
+  ansible.builtin.include_tasks: run_partner_certification.yml
+  when:
+    - downstream_project is defined
+    - lookup('env', 'SKIP_PARTNER_CERTIFICATION') | default('', true) | length == 0

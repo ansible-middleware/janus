@@ -358,6 +358,12 @@
         - project_root_folder is defined
         - project_git_url is defined
 
+    - name: Verify upstream project changelog includes the version being built
+      ansible.builtin.include_tasks: tasks/check_upstream_changelog.yml
+      when:
+        - project_root_folder is defined
+        - project_git_url is defined
+
   tasks:
     - name: Run FQCN migration
       ansible.builtin.include_role:
@@ -410,6 +416,12 @@
       when: override_galaxy_version | length > 0
 
   post_tasks:
+    # Quality checks must run before release.yml so a failing check cannot leave a bad tag.
+    - name: Run Janus quality checks on downstream collection
+      ansible.builtin.include_tasks: tasks/run_janus_quality_checks.yml
+      when:
+        - downstream_project is defined
+
     - name: "Perform release (if requested): {{ release_version == '' | ternary('no release version provided', release_version) }}."
       ansible.builtin.include_role:
         name: community.fqcn_migration.fqcn_migration

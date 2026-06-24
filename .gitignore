@@ -19,6 +19,10 @@ docs/_build/
 .pytest_cache/
 .mypy_cache/
 *.retry
+# Local Ansible collection install / cache (ansible-galaxy, ansible-navigator).
+.ansible/
 
 inventory
 changelogs/.plugin-cache.yaml
+changelogs/fragments/*.yaml
+changelogs/fragments/*.yml

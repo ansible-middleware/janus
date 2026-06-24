@@ -45,7 +45,7 @@
       ansible.builtin.set_fact:
         downstream_project: "{{ downstream_projects_dir }}/{{ downstream_name }}"
 
-    - name: Git clone {{ project_git_url }} [{{ project_git_version }}] into {{ project_root_folder }}
+    - name: Git clone upstream repository
       ansible.builtin.include_role:
         name: community.fqcn_migration.git
         tasks_from: clone.yml
@@ -67,6 +67,12 @@
       when: override_galaxy_version | length > 0
 
   post_tasks:
+    # Quality checks must run before release.yml so a failing check cannot leave a bad tag.
+    - name: Run Janus quality checks on downstream collection
+      ansible.builtin.include_tasks: tasks/run_janus_quality_checks.yml
+      when:
+        - downstream_project is defined
+
     - name: "Perform release (if requested): {{ release_version == '' | ternary('no release version provided', release_version) }}."
       ansible.builtin.include_role:
         name: community.fqcn_migration.fqcn_migration
@@ -76,7 +82,17 @@
         - release_version != ""
         - release_version != "TEST"
 
+    - name: "Read galaxy.yml to get collection version"
+      ansible.builtin.slurp:
+        src: "{{ downstream_project }}/galaxy.yml"
+      register: _galaxy_yml
+
+    - name: "Parse collection version from galaxy.yml"
+      ansible.builtin.set_fact:
+        _collection_version: "{{ (_galaxy_yml.content | b64decode | from_yaml).version }}"
+
     - name: Build collection for {{ downstream_name }}
       ansible.builtin.command: ansible-galaxy collection build .
       args:
         chdir: "{{ downstream_project }}"
+        creates: "{{ downstream_namespace }}-{{ downstream_name }}-{{ _collection_version }}.tar.gz"

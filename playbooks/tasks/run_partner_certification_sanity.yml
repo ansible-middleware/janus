@@ -1,0 +1,24 @@
+---
+- name: Install ansible-core for sanity testing {{ sanity_target.ansible_core_version }}
+  ansible.builtin.pip:
+    name: "ansible-core=={{ sanity_target.ansible_core_version }}"
+    state: present
+    virtualenv: "{{ partner_certification_venv }}"
+    extra_args: --upgrade
+
+- name: Execute ansible-test sanity in Docker {{ sanity_target.ansible_core_version }}
+  ansible.builtin.command:
+    argv:
+      - "{{ partner_certification_venv }}/bin/ansible-test"
+      - sanity
+      - --docker
+      - --python
+      - "{{ sanity_target.python_version }}"
+      - --color
+      - --verbose
+  args:
+    chdir: "{{ partner_certification_collection_root }}"
+  environment:
+    ANSIBLE_TEST_ALLOW_ROOT: "1"
+  register: _partner_cert_sanity
+  changed_when: false
