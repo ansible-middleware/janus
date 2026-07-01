@@ -68,7 +68,7 @@
        replace: "8.0.0"
      - match: "37.0.0.Final"
        replace: "8.0.0"
-     - match: "39.0.0.Final"
+     - match: "40.0.0.Final"
        replace: "8.1.0"
      # wildfly_migration upstream used to ship eap_* defaults with bare eap_version in ternary/is version,
      # which breaks validate_argument_spec. post_processors_replacements uses REGEX (community.fqcn_migration).
