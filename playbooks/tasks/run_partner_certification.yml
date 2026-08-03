@@ -1,0 +1,181 @@
+---
+# Run Red Hat Partner Certification Checker checks on a downstream collection.
+# Mirrors ansible-collections/partner-certification-checker v3.0.0:
+#   - galaxy-importer build/import (CHECK_REQUIRED_TAGS, no lint in importer)
+#   - ansible-lint --profile=production
+#   - ansible-test sanity --docker for stable-2.16, stable-2.18, stable-2.20
+#
+# Set SKIP_PARTNER_CERTIFICATION=1 to bypass (local development only).
+
+- name: Determine partner certification collection root
+  ansible.builtin.set_fact:
+    partner_certification_collection_root: "{{ downstream_project }}"
+  when: partner_certification_collection_root is not defined
+
+- name: Set partner certification check defaults
+  ansible.builtin.set_fact:
+    partner_certification_ansible_core_version: "{{ partner_certification_ansible_core_version | default('2.16.0') }}"
+    partner_certification_galaxy_importer_version: "{{ partner_certification_galaxy_importer_version | default('0.4.31') }}"
+    partner_certification_ansible_lint_version: "{{ partner_certification_ansible_lint_version | default('24.12.2') }}"
+    partner_certification_output_dir: "{{ partner_certification_output_dir | default('/tmp/janus-partner-certification') }}"
+    partner_certification_python_version: "{{ partner_certification_python_version | default('3.12') }}"
+    partner_certification_venv: "{{ (partner_certification_output_dir | default('/tmp/janus-partner-certification')) }}/venv-py{{ (partner_certification_python_version | default('3.12')) | replace('.', '') }}"
+    partner_certification_collections_path: "{{ (partner_certification_output_dir | default('/tmp/janus-partner-certification')) }}/collections"
+    partner_certification_sanity_targets:
+      - { ansible_core_version: "2.16.0", python_version: "3.12" }
+      - { ansible_core_version: "2.18.0", python_version: "3.12" }
+      - { ansible_core_version: "2.20.0", python_version: "3.12" }
+
+- name: Ensure partner certification output directory exists
+  ansible.builtin.file:
+    path: "{{ partner_certification_output_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Write galaxy-importer configuration for partner certification
+  ansible.builtin.copy:
+    dest: "{{ partner_certification_output_dir }}/galaxy-importer.cfg"
+    mode: "0644"
+    content: |
+      [galaxy-importer]
+      CHECK_REQUIRED_TAGS=True
+      RUN_ANSIBLE_LINT=False
+
+- name: Create partner certification virtualenv
+  ansible.builtin.command:
+    cmd: python{{ partner_certification_python_version }} -m venv "{{ partner_certification_venv }}"
+    creates: "{{ partner_certification_venv }}/bin/python"
+
+- name: Upgrade pip in partner certification virtualenv
+  ansible.builtin.command:
+    argv:
+      - "{{ partner_certification_venv }}/bin/python"
+      - -m
+      - pip
+      - install
+      - --upgrade
+      - pip
+  changed_when: false
+
+- name: Install partner certification tooling (galaxy-importer and ansible-lint)
+  ansible.builtin.pip:
+    name:
+      - "ansible-core=={{ partner_certification_ansible_core_version }}"
+      - "galaxy-importer=={{ partner_certification_galaxy_importer_version }}"
+      - "ansible-lint=={{ partner_certification_ansible_lint_version }}"
+    state: present
+    virtualenv: "{{ partner_certification_venv }}"
+    extra_args: --upgrade
+
+- name: Run galaxy-importer build and import check
+  ansible.builtin.command:
+    argv:
+      - "{{ partner_certification_venv }}/bin/python"
+      - -m
+      - galaxy_importer.main
+      - --git-clone-path
+      - "{{ partner_certification_collection_root }}"
+      - --output-path
+      - "{{ partner_certification_output_dir }}"
+  environment:
+    GALAXY_IMPORTER_CONFIG: "{{ partner_certification_output_dir }}/galaxy-importer.cfg"
+  register: _partner_cert_galaxy_importer
+  changed_when: false
+
+- name: Set partner certification Ansible collections search path
+  ansible.builtin.set_fact:
+    partner_certification_ansible_collections_path: "{{ (partner_certification_output_dir | default('/tmp/janus-partner-certification')) }}/collections:{{ lookup('env', 'HOME') | default('/root', true) }}/.ansible/collections:/usr/share/ansible/collections"
+
+- name: Ensure partner certification collections directory exists
+  ansible.builtin.file:
+    path: "{{ partner_certification_collections_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Check for downstream collection requirements file
+  ansible.builtin.stat:
+    path: "{{ partner_certification_collection_root }}/requirements.yml"
+  register: _partner_cert_requirements_yml
+
+- name: Read downstream collection requirements for ansible-lint
+  ansible.builtin.slurp:
+    src: "{{ partner_certification_collection_root }}/requirements.yml"
+  register: _partner_cert_requirements_content
+  when: _partner_cert_requirements_yml.stat.exists
+
+- name: Parse downstream collection requirements for ansible-lint
+  ansible.builtin.set_fact:
+    _partner_cert_requirements: "{{ (_partner_cert_requirements_content.content | b64decode | from_yaml).collections | default([]) }}"
+  when: _partner_cert_requirements_yml.stat.exists
+
+- name: Determine downstream projects directory for local collection installs
+  ansible.builtin.set_fact:
+    _partner_cert_downstream_projects_dir: "{{ partner_certification_collection_root | dirname }}"
+
+- name: Check local downstream path exists for ansible-lint requirement
+  ansible.builtin.stat:
+    path: "{{ _partner_cert_downstream_projects_dir }}/{{ item.name | default(item) | regex_replace('^[^.]+\\.', '') }}/galaxy.yml"
+  loop: "{{ _partner_cert_requirements | default([]) }}"
+  register: _partner_cert_local_requirement_stats
+  when: _partner_cert_requirements is defined
+
+- name: Install local downstream collections for ansible-lint requirements
+  ansible.builtin.command:
+    argv:
+      - "{{ partner_certification_venv }}/bin/ansible-galaxy"
+      - collection
+      - install
+      - "{{ _partner_cert_downstream_projects_dir }}/{{ item.item.name | default(item.item) | regex_replace('^[^.]+\\.', '') }}"
+      - -p
+      - "{{ partner_certification_collections_path }}"
+      - --force
+      - --pre
+  loop: "{{ _partner_cert_local_requirement_stats.results | default([]) }}"
+  when:
+    - item.stat is defined
+    - item.stat.exists
+  environment:
+    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_ansible_collections_path }}"
+  changed_when: false
+
+- name: Install remaining collection requirements for ansible-lint from Galaxy
+  ansible.builtin.command:
+    argv:
+      - "{{ partner_certification_venv }}/bin/ansible-galaxy"
+      - collection
+      - install
+      - -r
+      - requirements.yml
+      - -p
+      - "{{ partner_certification_collections_path }}"
+      - --pre
+  args:
+    chdir: "{{ partner_certification_collection_root }}"
+  when:
+    - _partner_cert_requirements_yml.stat.exists
+    - >-
+      (_partner_cert_local_requirement_stats.results | default([]) | selectattr('stat.exists') | list | length)
+      < (_partner_cert_requirements | default([]) | length)
+  environment:
+    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_ansible_collections_path }}"
+  changed_when: false
+
+- name: Run ansible-lint production profile on downstream collection
+  ansible.builtin.command:
+    argv:
+      - "{{ partner_certification_venv }}/bin/ansible-lint"
+      - --offline
+      - --profile=production
+  args:
+    chdir: "{{ partner_certification_collection_root }}"
+  environment:
+    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_ansible_collections_path }}"
+  register: _partner_cert_ansible_lint
+  changed_when: false
+
+- name: Run ansible-test sanity checks {{ sanity_target.ansible_core_version }}
+  ansible.builtin.include_tasks: run_partner_certification_sanity.yml
+  loop: "{{ partner_certification_sanity_targets }}"
+  loop_control:
+    loop_var: sanity_target
+    label: "ansible-core {{ sanity_target.ansible_core_version }}"

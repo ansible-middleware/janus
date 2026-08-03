@@ -221,6 +221,12 @@
       when: override_galaxy_version | length > 0
 
   post_tasks:
+    # Quality checks must run before release.yml so a failing check cannot leave a bad tag.
+    - name: Run Janus quality checks on downstream collection
+      ansible.builtin.include_tasks: tasks/run_janus_quality_checks.yml
+      when:
+        - downstream_project is defined
+
     - name: "Perform release (if requested): {{ release_version == '' | ternary('no release version provided', release_version) }}."
       ansible.builtin.include_role:
         name: community.fqcn_migration.fqcn_migration

@@ -20,7 +20,6 @@ build_ignore:
   - .github
   - '*.tar.gz'
   - '*.zip'
-  - changelogs/fragments/.gitignore
   - .gitignore
   - changelogs
   - docs/_gh_include
