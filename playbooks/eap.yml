@@ -97,6 +97,19 @@
      - match: "eap_migration_server_tool_subfolder_to_configuration:\\s*\"\\{\\{ \\(eap_version != '8\\.0\\.0'\\) \\| ternary\\('/migration',''\\) \\}\\}\""
        replace: 'eap_migration_server_tool_subfolder_to_configuration: ""'
        file: 'roles/eap_migration/defaults/main.yml$'
+     - match: "eap_install_supported_configuration:.*$"
+       replace: |-
+         eap_install_supported_configuration:
+           eap7.4:
+             openjdk: ['1.8', '11', '17']
+             rhel: ['7', '8', '9']
+           eap8.0:
+             openjdk: ['11', '17', '21']
+             rhel: ['8', '9', '10']
+           eap8.1:
+             openjdk: ['17', '21']
+             rhel: ['8', '9', '10']
+       file: 'roles/eap_install/defaults/main.yml$'
     galaxy:
       documentation: https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform
       homepage: https://access.redhat.com/products/red-hat-jboss-enterprise-application-platform
