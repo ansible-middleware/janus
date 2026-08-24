@@ -20,7 +20,7 @@
     partner_certification_output_dir: "{{ partner_certification_output_dir | default('/tmp/janus-partner-certification') }}"
     partner_certification_python_version: "{{ partner_certification_python_version | default('3.12') }}"
     partner_certification_venv: "{{ (partner_certification_output_dir | default('/tmp/janus-partner-certification')) }}/venv-py{{ (partner_certification_python_version | default('3.12')) | replace('.', '') }}"
-    partner_certification_collections_path: "{{ (partner_certification_output_dir | default('/tmp/janus-partner-certification')) }}/collections"
+    partner_certification_collections_dir: "{{ (partner_certification_output_dir | default('/tmp/janus-partner-certification')) }}/collections"
     partner_certification_sanity_targets:
       - { ansible_core_version: "2.16.0", python_version: "3.12" }
       - { ansible_core_version: "2.18.0", python_version: "3.12" }
@@ -84,11 +84,12 @@
 
 - name: Set partner certification Ansible collections search path
   ansible.builtin.set_fact:
-    partner_certification_ansible_collections_path: "{{ (partner_certification_output_dir | default('/tmp/janus-partner-certification')) }}/collections:{{ lookup('env', 'HOME') | default('/root', true) }}/.ansible/collections:/usr/share/ansible/collections"
+    partner_certification_collections_path: "{{ partner_certification_collections_dir }}:{{ lookup('env', 'HOME') | default('/root', true) }}/.ansible/collections:/usr/share/ansible/collections"
+    partner_certification_installed_collection_path: "{{ partner_certification_collections_dir }}/ansible_collections/{{ downstream_namespace }}/{{ downstream_name }}"
 
 - name: Ensure partner certification collections directory exists
   ansible.builtin.file:
-    path: "{{ partner_certification_collections_path }}"
+    path: "{{ partner_certification_collections_dir }}"
     state: directory
     mode: "0755"
 
@@ -127,7 +128,7 @@
       - install
       - "{{ _partner_cert_downstream_projects_dir }}/{{ item.item.name | default(item.item) | regex_replace('^[^.]+\\.', '') }}"
       - -p
-      - "{{ partner_certification_collections_path }}"
+      - "{{ partner_certification_collections_dir }}"
       - --force
       - --pre
   loop: "{{ _partner_cert_local_requirement_stats.results | default([]) }}"
@@ -135,7 +136,7 @@
     - item.stat is defined
     - item.stat.exists
   environment:
-    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_ansible_collections_path }}"
+    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_collections_path }}"
   changed_when: false
 
 - name: Install remaining collection requirements for ansible-lint from Galaxy
@@ -147,7 +148,7 @@
       - -r
       - requirements.yml
       - -p
-      - "{{ partner_certification_collections_path }}"
+      - "{{ partner_certification_collections_dir }}"
       - --pre
   args:
     chdir: "{{ partner_certification_collection_root }}"
@@ -157,7 +158,21 @@
       (_partner_cert_local_requirement_stats.results | default([]) | selectattr('stat.exists') | list | length)
       < (_partner_cert_requirements | default([]) | length)
   environment:
-    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_ansible_collections_path }}"
+    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_collections_path }}"
+  changed_when: false
+
+- name: Install downstream collection itself for ansible-lint FQCN resolution
+  ansible.builtin.command:
+    argv:
+      - "{{ partner_certification_venv }}/bin/ansible-galaxy"
+      - collection
+      - install
+      - "{{ partner_certification_collection_root }}"
+      - -p
+      - "{{ partner_certification_collections_dir }}"
+      - --force
+  environment:
+    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_collections_path }}"
   changed_when: false
 
 - name: Run ansible-lint production profile on downstream collection
@@ -166,10 +181,12 @@
       - "{{ partner_certification_venv }}/bin/ansible-lint"
       - --offline
       - --profile=production
+      - --config-file
+      - "{{ partner_certification_collection_root }}/.ansible-lint"
   args:
-    chdir: "{{ partner_certification_collection_root }}"
+    chdir: "{{ partner_certification_installed_collection_path }}"
   environment:
-    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_ansible_collections_path }}"
+    ANSIBLE_COLLECTIONS_PATH: "{{ partner_certification_collections_path }}"
   register: _partner_cert_ansible_lint
   changed_when: false
 
