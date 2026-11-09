@@ -24,7 +24,7 @@
 
       - placeholder: ansible_version
         content: |
-          Red Hat has tested this collection against Ansible versions 2.14.0 or later.
+          Red Hat has tested this collection against Ansible versions 2.16.0 or later.
 
           Red Hat might test the plug-ins and modules that are within a collection with specific Ansible versions only. A collection can contain metadata that identifies these Ansible versions.
       - placeholder: galaxy_download
@@ -32,15 +32,13 @@
           For demonstration purposes, you can run the collection directly from this folder. However, the proper setup is to download and install the collection from the Red Hat Automation Hub.
 
           Before you install the collection, you must ensure that your system complies with the following prerequisites:
-            - You have installed the ansible-core package version 2.12 or later on a control node in your system by installing Red Hat Ansible Automation Platform 2.x.
+            - You have installed the ansible-core package version 2.16 or later on a control node in your system by installing Red Hat Ansible Automation Platform 2.x.
             - You have updated the ansible.cfg file to use the Red Hat Automation Hub as your *primary source* of Ansible collections.
           You can install the collection on your Ansible control node by using the following command:
               $ ansible-galaxy collection install redhat.jbcs
       - placeholder: support
         content: |
-          redhat.jbcs collection v{{ galaxy_version | default('0.0.0-dev') }} is for [Technical Preview](https://access.redhat.com/support/offerings/techpreview).
-          If you have any issues or questions related to this collection, please contact support at [Red Hat Customer
-          Experience & Engagement](https://access.redhat.com/support/).
+          As Red Hat Ansible Certified Content, this collection is entitled to support through the Ansible Automation Platform (AAP) using the **Create issue** button on the top right corner. If a support case cannot be opened with Red Hat and the collection has been obtained either from [Galaxy](https://galaxy.ansible.com/ui/) or [GitHub](https://github.com/ansible-middleware/jbcs/), there may be community help available on the [Ansible Forum](https://forum.ansible.com/).
 
       - placeholder: rhn_credentials
         content: |
